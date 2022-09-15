@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "632456935439",
+    "project_id": "cantique-goun",
+    "storage_bucket": "cantique-goun.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632456935439:android:12b4fd0eb9ab9d60dd4b7a",
+        "android_client_info": {
+          "package_name": "com.pirc.cantique"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "632456935439-qq96hamjfqchmdkb42b9ah78qih09mpc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pirc.cantique",
+            "certificate_hash": "8c84b50db63bb1bfbe435e82f17346bdbc320a88"
+          }
+        },
+        {
+          "client_id": "632456935439-gco6pdslfp8sjp43l8i42d35ro40ntev.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqjdaM1f2gsKDPjrxKn8ptAuxcBepn9KQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "632456935439-gco6pdslfp8sjp43l8i42d35ro40ntev.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
