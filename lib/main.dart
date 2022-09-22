@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
       title: 'Cantique',
       debugShowCheckedModeBanner: false,
       theme: AppStyles.themeData(false, context),
+      darkTheme: AppStyles.themeData(true, context),
       home: const AdminHomePage(),
     );
   }

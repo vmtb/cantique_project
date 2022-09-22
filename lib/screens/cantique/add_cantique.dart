@@ -47,7 +47,9 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    print('Choix song');
+                  },
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
                     width: getSize(context).width,
@@ -77,7 +79,7 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
               ),
               AppInput(
                   controller: titleController,
-                  label: "Titre du cantique",
+                  label: "Titre du canti;que",
                   validationBuilder: ValidationBuilder()),
               const SizedBox(
                 height: 10,
