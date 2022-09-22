@@ -365,7 +365,11 @@ packages:
       name: material_color_utilities
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "0.1.4"
+=======
+    version: "0.1.5"
+>>>>>>> 0db47e9 (maj)
   meta:
     dependency: transitive
     description:
@@ -552,7 +556,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.2"
+    version: "1.9.0"
   sqflite:
     dependency: transitive
     description:
