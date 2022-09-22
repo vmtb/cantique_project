@@ -135,13 +135,19 @@ packages:
     source: hosted
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 53f6877 (maj)
     version: "1.3.0"
 =======
     version: "1.3.1"
 >>>>>>> 0db47e9 (maj)
+<<<<<<< HEAD
 =======
     version: "1.3.1"
 >>>>>>> ca6468c (maj)
+=======
+>>>>>>> 53f6877 (maj)
   ffi:
     dependency: transitive
     description:
@@ -375,13 +381,19 @@ packages:
     source: hosted
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 53f6877 (maj)
     version: "0.1.4"
 =======
     version: "0.1.5"
 >>>>>>> 0db47e9 (maj)
+<<<<<<< HEAD
 =======
     version: "0.1.5"
 >>>>>>> ca6468c (maj)
+=======
+>>>>>>> 53f6877 (maj)
   meta:
     dependency: transitive
     description:
@@ -570,13 +582,19 @@ packages:
     source: hosted
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 53f6877 (maj)
     version: "1.8.2"
 =======
     version: "1.9.0"
 >>>>>>> 0db47e9 (maj)
+<<<<<<< HEAD
 =======
     version: "1.9.0"
 >>>>>>> ca6468c (maj)
+=======
+>>>>>>> 53f6877 (maj)
   sqflite:
     dependency: transitive
     description:
