@@ -9,7 +9,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../controllers/Cantique_crudControlller.dart';
+Provider<FirebaseAuth> mAuthRef = Provider((ref) => FirebaseAuth.instance);
+Provider<CollectionReference> userRef =
+    Provider((ref) => FirebaseFirestore.instance.collection("Users"));
+Provider<Reference> thumbStorageRef =
+    Provider((ref) => FirebaseStorage.instance.ref().child("Audios"));
 
 Provider<FirebaseAuth> mAuthRef = Provider((ref)=>FirebaseAuth.instance);
 Provider<CollectionReference> userRef = Provider((ref)=>FirebaseFirestore.instance.collection("Users"));
