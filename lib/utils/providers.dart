@@ -33,5 +33,3 @@ final fetchCantiqueByCategorie =
 Provider<DatabaseReference> databaseRef =
     Provider((ref) => FirebaseDatabase.instance.ref().child("CURRENT_ID"));
 
-
-//FirebaseDatabase.instance.ref
