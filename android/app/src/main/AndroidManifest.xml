@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pirc.cantique">
    <application
+
         android:label="cantique"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
