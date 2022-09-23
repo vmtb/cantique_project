@@ -96,7 +96,7 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
               ),
               AppInput(
                   controller: titleController,
-                  label: "Titre du canti;que",
+                  label: "Titre du cantique",
                   validationBuilder: ValidationBuilder()),
               const SizedBox(
                 height: 10,
