@@ -1,13 +1,6 @@
-
-
-import 'dart:io';
-
 import 'package:cantique/controllers/Cantique_crudControlller.dart';
 import 'package:cantique/models/cantique.dart';
-import 'package:cantique/screens/cantique/cantique_list.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Provider<FirebaseAuth> mAuthRef = Provider((ref) => FirebaseAuth.instance);
@@ -23,6 +16,6 @@ final CantiqueCrudController = Provider((ref) => CantiqueController(ref));
 
 final fetchAllTest = FutureProvider<List<Cantique>>((ref)=>CantiqueController(ref).fetchAllTest());
 
-final fetchFavoriteCantique = FutureProvider<List<Cantique>>((ref)=>CantiqueController(ref).getFavoriteCantique());
-
-final fetchCantiqueByCategorie = FutureProvider<List<Map<String,List<Cantique>>>>((ref)=>CantiqueController(ref).getAbcCantique());
+final fetchCantiqueByCategorie =
+    FutureProvider<List<Map<String, List<Cantique>>>>(
+        (ref) => CantiqueController(ref).getAbcCantique());
