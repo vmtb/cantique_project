@@ -133,11 +133,7 @@ packages:
       name: fake_async
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "1.3.0"
-=======
     version: "1.3.1"
->>>>>>> 0db47e9 (maj)
   ffi:
     dependency: transitive
     description:
@@ -556,11 +552,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "1.8.2"
-=======
     version: "1.9.0"
->>>>>>> 0db47e9 (maj)
   sqflite:
     dependency: transitive
     description:
