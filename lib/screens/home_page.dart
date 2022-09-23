@@ -1,4 +1,5 @@
 import 'package:cantique/components/app_button.dart';
+import 'package:cantique/screens/simple_user/liste_cantique.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:cantique/utils/app_styles.dart';
@@ -113,7 +114,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     InkWell(
                       borderRadius: BorderRadius.circular(20),
                       onTap: () {
-                        //navigateToNextPage(context, const CantiqueList());
+                        //navigateToNextPage(context, const ListeCantique());
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -185,27 +186,31 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ],
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: getBackCont(context),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.list,
-                            size: 60,
-                            color: getWhite(context),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          AppText(
-                            StringData.cantique,
-                            color: getWhite(context),
-                            size: 18,
-                          ),
-                        ],
+                    InkWell(
+                      onTap: (() =>
+                          navigateToNextPage(context, const ListeCantique())),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: getBackCont(context),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.list,
+                              size: 60,
+                              color: getWhite(context),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            AppText(
+                              StringData.cantique,
+                              color: getWhite(context),
+                              size: 18,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
