@@ -83,6 +83,90 @@ class AppStyles {
   );
 }
 
+class AppStyles2 {
+  static ThemeData themeData(bool isDarkTheme, BuildContext context) {
+    return ThemeData(
+      primarySwatch: isDarkTheme ? darkMainPrimaryColor : lightMainPrimaryColor,
+
+      backgroundColor: isDarkTheme ? const Color(0xff111111) : Colors.white,
+
+      primaryColor: isDarkTheme ? Colors.black : Colors.white,
+
+      //textSelectionHandleColor: isDarkTheme ? Colors.white : Colors.black,
+
+      indicatorColor:
+          isDarkTheme ? const Color(0xff0E1D36) : const Color(0xffCBDCF8),
+
+      hintColor:
+          isDarkTheme ? const Color(0xff280C0B) : const Color(0xffEECED3),
+
+      //highlightColor: isDarkTheme ? const Color(0xff372901) : Colors.white,
+
+      hoverColor:
+          isDarkTheme ? const Color(0xff3A3A3B) : const Color(0xff4285F4),
+
+      focusColor:
+          isDarkTheme ? const Color(0xff0B2512) : const Color(0xffA8DAB5),
+
+      disabledColor: Colors.grey,
+
+      cardColor: isDarkTheme ? const Color(0xFF151515) : Colors.white,
+
+      canvasColor: isDarkTheme ? Colors.black : Colors.grey[50],
+
+      brightness: isDarkTheme ? Brightness.dark : Brightness.light,
+
+      buttonTheme: Theme.of(context).buttonTheme.copyWith(
+          colorScheme: isDarkTheme
+              ? const ColorScheme.dark()
+              : const ColorScheme.light()),
+
+      splashColor: isDarkTheme ? Colors.white : primaryColor_,
+
+      appBarTheme: const AppBarTheme(
+        elevation: 0.0,
+      ),
+
+      textSelectionTheme: TextSelectionThemeData(
+          selectionColor: isDarkTheme ? Colors.white : Colors.black),
+    );
+  }
+
+  static MaterialColor lightMainPrimaryColor = const MaterialColor(
+    0xffac6804,
+    <int, Color>{
+      50: primaryColor_,
+      100: primaryColor_,
+      200: primaryColor_,
+      300: primaryColor_,
+      400: primaryColor_,
+      500: primaryColor_,
+      600: primaryColor_,
+      700: primaryColor_,
+      800: primaryColor_,
+      900: primaryColor_,
+    },
+  );
+  static MaterialColor darkMainPrimaryColor = const MaterialColor(
+    0xff3e3e3e,
+    <int, Color>{
+      50: Colors.white,
+      100: Colors.white,
+      200: Colors.white,
+      300: Colors.white,
+      400: Colors.white,
+      500: Colors.white,
+      600: Colors.white,
+      700: Colors.white,
+      800: Colors.white,
+      900: Colors.white,
+    },
+  );
+}
+// Noir: #111111
+//Gris: #3E3E3E
+//Orange: #AC6804
+
 Color getWhite(BuildContext context) {
   return Theme.of(context).primaryColor;
 }
