@@ -1,4 +1,9 @@
-import 'package:cantique/controllers/Cantique_crudControlller.dart';
+
+
+import 'dart:io';
+
+import 'package:cantique/models/cantique.dart';
+import 'package:cantique/screens/cantique/cantique_list.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
