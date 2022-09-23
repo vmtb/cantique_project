@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../components/app_text.dart';
 import '../../utils/app_const.dart';
 import '../../utils/app_styles.dart';
+import '../../utils/providers.dart';
 
 class AddCantique extends ConsumerStatefulWidget {
   const AddCantique({
@@ -79,7 +80,7 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
               ),
               AppInput(
                   controller: titleController,
-                  label: "Titre du canti;que",
+                  label: "Titre du cantique",
                   validationBuilder: ValidationBuilder()),
               const SizedBox(
                 height: 10,
@@ -224,6 +225,16 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                   ),
                 );
               }, shrinkWrap: true, physics: const NeverScrollableScrollPhysics(), itemCount: content.length,),
+
+              ElevatedButton(onPressed: () async {
+                print(content);
+                print(titleController.text);
+                await ref
+                    .read(CantiqueCrudController)
+                    .saveToCantique(titleController.text,"wwww",content);
+              }, child: Container(
+                child: Text("Ajouter Cantique"),
+              ))
             ],
           ),
         ),
