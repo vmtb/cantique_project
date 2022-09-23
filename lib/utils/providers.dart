@@ -5,6 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Provider<FirebaseAuth> mAuthRef = Provider((ref) => FirebaseAuth.instance);
 Provider<CollectionReference> userRef =
-    Provider((ref) => FirebaseFirestore.instance.collection("Users"));
+Provider((ref) => FirebaseFirestore.instance.collection("Users"));
 Provider<Reference> thumbStorageRef =
     Provider((ref) => FirebaseStorage.instance.ref().child("Audios"));
