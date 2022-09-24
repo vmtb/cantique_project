@@ -17,7 +17,7 @@ class StringData {
   static String copyRight = "Copyright: LIS - 2020";
   static String titleListe = "Tous les Cantiques";
   static String hintSearchByTitle = "Entrer le titre";
-//   static String var1 = "";
+  static String lyrics = "Lyrics";
 //   static String var1 = "";
 //   static String var1 = "";
 //   static String var1 = "";

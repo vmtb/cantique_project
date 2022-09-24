@@ -1,4 +1,6 @@
 import 'package:cantique/components/app_text.dart';
+import 'package:cantique/models/cantique.dart';
+import 'package:cantique/screens/simple_user/play_music.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:cantique/utils/app_styles.dart';
@@ -20,6 +22,8 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
     controller.dispose();
     super.dispose();
   }
+
+  List<Cantique> liste = listeDemoCatique;
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +69,7 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
                 ),
                 border: InputBorder.none,
               ),
+              onChanged: searchCantique,
             ),
           ),
           const SizedBox(
@@ -73,45 +78,57 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
           Expanded(
             child: ListView.separated(
               itemBuilder: ((context, index) {
-                return Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: getSize(context).width * 0.04),
-                  height: 50,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    //color: Colors.green[100],
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CircleAvatar(
-                              backgroundColor: getBackCont(context),
-                              radius: 15,
-                              child: AppText(
-                                (index + 1).toString(),
-                                color: getWhite(context),
+                return GestureDetector(
+                  onTap: () {
+                    navigateToNextPage(
+                        context,
+                        PlayMusics(
+                          cantique: liste[index],
+                        ));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.symmetric(
+                        horizontal: getSize(context).width * 0.04),
+                    height: 50,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      //color: Colors.green[100],
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircleAvatar(
+                                backgroundColor: getBackCont(context),
+                                radius: 15,
+                                child: AppText(
+                                  (index + 1).toString(),
+                                  color: getWhite(context),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ),
-                          ),
-                          const AppText("Titrre de l'évernement"),
-                        ],
-                      ),
-                      //const SizedBox.expand(),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.play_arrow,
-                          color: getBackCont(context),
-                          size: 25,
+                            AppText(
+                              liste[index].title,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
-                      )
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.play_arrow,
+                            color: getBackCont(context),
+                            size: 25,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 );
               }),
@@ -121,11 +138,24 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
                     height: 0,
                     color: Colors.grey,
                   )),
-              itemCount: 3,
+              itemCount: liste.length,
             ),
           ),
         ],
       ),
     );
+  }
+
+  void searchCantique(String querry) {
+    final suggestions = liste.where((cantique) {
+      final input = querry.toLowerCase();
+      final cantiqueTitle = cantique.title.toLowerCase();
+
+      return cantiqueTitle.contains(input);
+    }).toList();
+
+    setState(() {
+      liste = suggestions;
+    });
   }
 }

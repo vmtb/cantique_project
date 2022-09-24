@@ -28,3 +28,91 @@ class Cantique {
     );
   }
 }
+
+List<Cantique> listeDemoCatique = [
+  Cantique(
+      title: "Dieu est bon",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "Amour infini",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "La vie éternelest un don ",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "Tiens toi bon sur le chemin",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "La fin est proche",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "Alléluyah",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "Ma vie en tant que chrétien",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "Zindo",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "Daaga",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "Donan tché aklunon",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "Pardonne moi éternel",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "Sans toi je ne suis rien seigneiur",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "Kilisun ahosu",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "Doonan tché - Doonoun mi",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "Promet moi la vie éternel seigneur",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "Sans toi je ne suis rien",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+  Cantique(
+      title: "Il est merveilleux",
+      songUrl: "",
+      contenu: [],
+      time: DateTime.now().toString()),
+];

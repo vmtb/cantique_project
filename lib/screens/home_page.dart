@@ -222,7 +222,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
       ),
       bottomNavigationBar: Container(
-        height: 50,
+        height: 60,
         color: getBackCont(context),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -231,13 +231,13 @@ class _HomePageState extends ConsumerState<HomePage> {
               "\u00a9",
               color: getWhite(context),
               align: TextAlign.center,
-              size: 22,
+              size: 20,
             ),
             AppText(
               StringData.copyRight,
               color: getWhite(context),
               align: TextAlign.center,
-              size: 15,
+              size: 13,
             ),
           ],
         ),
