@@ -19,7 +19,6 @@ final CantiqueDatasProvider =
     Provider((ref) => FirebaseFirestore.instance.collection("Cantiques"));
 final CantiqueCrudController = Provider((ref) => CantiqueController(ref));
 
-<<<<<<< HEAD
 final fetchAllTest = FutureProvider<List<Cantique>>(
     (ref) => CantiqueController(ref).fetchAllTest());
 
@@ -36,7 +35,3 @@ Provider<DatabaseReference> databaseRef =
 
 
 //FirebaseDatabase.instance.ref
-=======
-
-final fetchAllTest = FutureProvider<List<Cantique>>((ref)=>CantiqueController(ref).fetchAllTest());
->>>>>>> d825c43 (Mise en place de la fonctionnalité d'affichage)
