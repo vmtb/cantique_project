@@ -65,6 +65,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       height: 60,
                       width: getSize(context).width * 0.6,
                       child: TextFormField(
+                        controller: controller,
                         decoration: InputDecoration(
                           hintText: StringData.entrerNumero,
                         ),

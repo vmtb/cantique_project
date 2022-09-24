@@ -1,19 +1,21 @@
-class Cantique{
+class Cantique {
+  String title = "";
+  String songUrl = "";
+  String time = "";
+  List contenu = [];
 
-  String title="";
-  String songUrl="";
-  String time="";
-  List contenu=[];
-
-
-  Cantique({required this.title,required this.songUrl,required this.contenu,required this.time});
+  Cantique(
+      {required this.title,
+      required this.songUrl,
+      required this.contenu,
+      required this.time});
 
   Map<String, dynamic> toMap() {
     return {
-      'title': this.title,
-      'songUrl': this.songUrl,
-      'contenu':this.contenu,
-      'time': this.time,
+      'title': title,
+      'songUrl': songUrl,
+      'contenu': contenu,
+      'time': time,
     };
   }
 
@@ -25,6 +27,4 @@ class Cantique{
       contenu: map['contenu'] as List,
     );
   }
-
-
 }
