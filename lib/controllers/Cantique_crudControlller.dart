@@ -13,4 +13,15 @@ class CantiqueController{
     print(cantique.toMap());
     await ref.read(CantiqueDatasProvider).add(cantique.toMap());
   }
+
+  Future<List<Cantique>> fetchAllTest() async {
+    List<Cantique> models = [];
+    await ref.read(CantiqueDatasProvider).get().then((value){
+      value.docs.forEach((element) {
+        models.add(Cantique.fromMap(element.data()));
+      });
+    });
+
+    return models;
+  }
 }

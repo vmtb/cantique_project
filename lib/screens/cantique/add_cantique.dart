@@ -9,6 +9,7 @@ import '../../components/app_text.dart';
 import '../../utils/app_const.dart';
 import '../../utils/app_styles.dart';
 import '../../utils/providers.dart';
+import 'cantique_list.dart';
 
 class AddCantique extends ConsumerStatefulWidget {
   const AddCantique({
@@ -232,6 +233,12 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                 await ref
                     .read(CantiqueCrudController)
                     .saveToCantique(titleController.text,"wwww",content);
+
+                ref.refresh(fetchAllTest);
+
+                showFlushBar( context,"Message succes","Ajout réussi");
+                navigateToNextPage(context, const CantiqueList());
+
               }, child: Container(
                 child: Text("Ajouter Cantique"),
               ))

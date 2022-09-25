@@ -18,3 +18,6 @@ Provider<Reference> thumbStorageRef =
 final CantiqueDatasProvider =
     Provider((ref) => FirebaseFirestore.instance.collection("Cantiques"));
 final CantiqueCrudController = Provider((ref) => CantiqueController(ref));
+
+
+final fetchAllTest = FutureProvider<List<Cantique>>((ref)=>CantiqueController(ref).fetchAllTest());
