@@ -12,8 +12,11 @@ import '../../utils/app_const.dart';
 import '../../utils/app_styles.dart';
 import '../../utils/providers.dart';
 import 'cantique_list.dart';
+<<<<<<< HEAD
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
+=======
+>>>>>>> d825c43 (Mise en place de la fonctionnalité d'affichage)
 
 import 'package:file_picker/file_picker.dart';
 
@@ -296,6 +299,7 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                         isLoading = true;
                       });
 
+<<<<<<< HEAD
                       await ref
                           .read(CantiqueCrudController)
                           .saveToCantique(
@@ -315,6 +319,23 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                           color: getWhite(context),
                         )
                       : const Text("Ajouter Cantique"))
+=======
+              ElevatedButton(onPressed: () async {
+                print(content);
+                print(titleController.text);
+                await ref
+                    .read(CantiqueCrudController)
+                    .saveToCantique(titleController.text,"wwww",content);
+
+                ref.refresh(fetchAllTest);
+
+                showFlushBar( context,"Message succes","Ajout réussi");
+                navigateToNextPage(context, const CantiqueList());
+
+              }, child: Container(
+                child: Text("Ajouter Cantique"),
+              ))
+>>>>>>> d825c43 (Mise en place de la fonctionnalité d'affichage)
             ],
           ),
         ),
