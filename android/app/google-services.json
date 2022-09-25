@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "632456935439-h029ju0h4q53h08vdg5on0k1okgagsoj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pirc.cantique",
+            "certificate_hash": "957656af9bc31c6d13bfca186d91986434268632"
+          }
+        },
+        {
           "client_id": "632456935439-qq96hamjfqchmdkb42b9ah78qih09mpc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
