@@ -111,17 +111,49 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
             size: 25,
             color: getPrimaryColor(context),
             isNormal: false,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(
-            height: 10,
+            height: 15,
           ),
           AppText(
             "Mélodie: Praise ye the father",
             size: 20,
             color: getPrimaryColor(context),
-            isNormal: true,
+            isNormal: false,
           ),
-          
+          const SizedBox(
+            height: 20,
+          ),
+          ...List.generate(widget.cantique.contenu.length, (index) {
+            Map<String, String> data =
+                widget.cantique.contenu[index] as Map<String, String>;
+            String key = data.keys.first;
+            String content = data.values.first;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                AppText(
+                  key,
+                  align: TextAlign.center,
+                  weight: FontWeight.bold,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AppText(
+                    content,
+                    align: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+
+                
+              ],
+            );
+          }).toList()
         ]),
       ),
     );
