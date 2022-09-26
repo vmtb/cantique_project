@@ -1,4 +1,5 @@
 import 'package:cantique/controllers/Cantique_crudControlller.dart';
+import 'package:cantique/models/cantique.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
