@@ -1,4 +1,3 @@
-import 'package:cantique/screens/admin_home_page.dart';
 import 'package:cantique/screens/home_page.dart';
 import 'package:cantique/utils/app_styles.dart';
 import 'package:firebase_core/firebase_core.dart';

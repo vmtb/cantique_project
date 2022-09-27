@@ -7,6 +7,7 @@ import 'package:cantique/utils/app_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class PlayMusics extends ConsumerStatefulWidget {
   PlayMusics({Key? key, required this.cantique}) : super(key: key);
@@ -17,11 +18,45 @@ class PlayMusics extends ConsumerStatefulWidget {
 
 class _PlayMusicsState extends ConsumerState<PlayMusics> {
   TextEditingController controller = TextEditingController();
+  final audiPlayer = AudioPlayer();
+  bool isPlaying = false;
+  Duration duration = Duration.zero;
+  Duration position = Duration.zero;
 
   @override
   void dispose() {
     controller.dispose();
+    audiPlayer.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    setAudio();
+    audiPlayer.onPlayerStateChanged.listen((event) {
+      setState(() {
+        isPlaying = event == PlayerState.PLAYING;
+      });
+    });
+
+    audiPlayer.onDurationChanged.listen((event) {
+      setState(() {
+        duration = event;
+      });
+    });
+
+    audiPlayer.onAudioPositionChanged.listen((event) {
+      setState(() {
+        position = event;
+      });
+    });
+    super.initState();
+  }
+
+  Future setAudio() async {
+    String url =
+        'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3';
+    await audiPlayer.setUrl(url);
   }
 
   @override
@@ -149,13 +184,67 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
                 const SizedBox(
                   height: 10,
                 ),
-
-                
               ],
             );
-          }).toList()
+          }).toList(),
+          const SizedBox(
+            height: 20,
+          ),
+          Slider(
+              min: 0,
+              max: duration.inSeconds.toDouble(),
+              value: position.inSeconds.toDouble(),
+              onChanged: ((value) async {
+                final position = Duration(seconds: value.toInt());
+                await audiPlayer.seek(position);
+                await audiPlayer.resume();
+              })),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AppText(formatTime(position)),
+                AppText(formatTime(duration - position)),
+              ],
+            ),
+          ),
+          CircleAvatar(
+            radius: 30,
+            child: IconButton(
+              icon: Icon(
+                isPlaying ? Icons.pause : Icons.play_arrow,
+              ),
+              iconSize: 50,
+              onPressed: (() async {
+                if (isPlaying) {
+                  await audiPlayer.pause();
+                } else {
+                  await audiPlayer.resume();
+                }
+              }),
+            ),
+          )
         ]),
       ),
     );
   }
+
+  String formatTime(Duration position) {
+    int seconds = position.inSeconds.toInt();
+
+    String minuteString =
+        '${(seconds / 60).floor() < 10 ? 0 : ''}${(seconds / 60).floor()}';
+    String secondString = '${seconds % 60 < 10 ? 0 : ''}${seconds % 60}';
+    return '$minuteString:$secondString';
+
+    //return "${position.toString().split(":")[1]}:${position.toString().split(":")[2]}";
+  }
+
+  // String getTimeString(int seconds) {
+  //   String minuteString =
+  //       '${(seconds / 60).floor() < 10 ? 0 : ''}${(seconds / 60).floor()}';
+  //   String secondString = '${seconds % 60 < 10 ? 0 : ''}${seconds % 60}';
+  //   return '$minuteString:$secondString'; // Returns a string with the format mm:ss
+  // }
 }

@@ -30,6 +30,7 @@ dependencies:
   google_fonts:
   cached_network_image:
   file_picker:
+  audioplayers: ^0.20.1
 
 
 
