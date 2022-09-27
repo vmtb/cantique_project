@@ -58,7 +58,7 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
             child: TextFormField(
               controller: controller,
               decoration: InputDecoration(
-                hintText: StringData.entrerNumero,
+                hintText: StringData.hintSearchByTitle,
                 hintStyle: TextStyle(
                   color: getPrimaryColor(context),
                 ),
