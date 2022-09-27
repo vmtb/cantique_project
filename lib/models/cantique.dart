@@ -1,4 +1,6 @@
 class Cantique {
+  int id = -1;
+  bool isFavourite = false;
   String title = "";
   String songUrl = "";
   String time = "";
@@ -63,87 +65,87 @@ List<Map<String, String>> listeContenu = [
 List<Cantique> listeDemoCatique = [
   Cantique(
       title: "Dieu est bon",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "Amour infini",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "La vie éternelest un don ",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "Tiens toi bon sur le chemin",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "La fin est proche",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "Alléluyah",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "Ma vie en tant que chrétien",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "Zindo",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-17.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "Daaga",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-18.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "Donan tché aklunon",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "Pardonne moi éternel",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "Sans toi je ne suis rien seigneiur",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "Kilisun ahosu",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-17.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "Doonan tché - Doonoun mi",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-18.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "Promet moi la vie éternel seigneur",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-19.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "Sans toi je ne suis rien",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-20.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
   Cantique(
       title: "Il est merveilleux",
-      songUrl: "",
+      songUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-21.mp3",
       contenu: listeContenu,
       time: DateTime.now().toString()),
 ];

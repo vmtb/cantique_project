@@ -30,15 +30,15 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
-            color: getWhite(context),
+            //color: getWhite(context),
           ),
           onPressed: (() => Navigator.pop(context)),
         ),
         title: AppText(
           StringData.titleListe,
-          color: getWhite(context),
+          //color: getWhite(context),
           size: 18,
         ),
       ),
@@ -59,6 +59,10 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
               controller: controller,
               decoration: InputDecoration(
                 hintText: StringData.entrerNumero,
+                hintStyle: TextStyle(
+                  color: getPrimaryColor(context),
+                ),
+                focusColor: getPrimaryColor(context),
                 prefixIcon: Padding(
                   padding: const EdgeInsetsDirectional.all(8.0),
                   child: Icon(
