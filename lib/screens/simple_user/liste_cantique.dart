@@ -155,7 +155,7 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
       final input = querry.toLowerCase();
       final cantiqueTitle = cantique.title.toLowerCase();
 
-      return cantiqueTitle.contains(input);
+      return cantiqueTitle.startsWith(input);
     }).toList();
 
     setState(() {

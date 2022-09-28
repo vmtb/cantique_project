@@ -19,7 +19,7 @@ class StringData {
   static String hintSearchByTitle = "Entrer le titre";
   static String lyrics = "Lyrics";
   static String tableAlpha = "Table Alphabétique";
-//   static String var1 = "";
+  static String rechercheCantique = "";
 //   static String var1 = "";
 //   static String var1 = "";
 //   static String var1 = "";
