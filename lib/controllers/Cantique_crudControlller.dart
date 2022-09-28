@@ -28,7 +28,6 @@ class CantiqueController {
     });
   }
 
-<<<<<<< HEAD
   Future<String> addFileToStorage(File file) async {
     UploadTask task = ref.read(thumbStorageRef).putFile(file);
     TaskSnapshot snapshot = await task.whenComplete(() => null);
@@ -42,19 +41,10 @@ class CantiqueController {
       for (var element in value.docs) {
         models.add(Cantique.fromMap(element.data()));
       }
-=======
-  Future<List<Cantique>> fetchAllTest() async {
-    List<Cantique> models = [];
-    await ref.read(CantiqueDatasProvider).get().then((value){
-      value.docs.forEach((element) {
-        models.add(Cantique.fromMap(element.data()));
-      });
->>>>>>> d825c43 (Mise en place de la fonctionnalité d'affichage)
     });
 
     return models;
   }
-<<<<<<< HEAD
 
   Future<List<Cantique>> getFavoriteCantique() async {
     List<Cantique> favoris = [];
@@ -126,6 +116,3 @@ class CantiqueController {
     return myId;
   }
 }
-=======
-}
->>>>>>> d825c43 (Mise en place de la fonctionnalité d'affichage)
