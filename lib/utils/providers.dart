@@ -17,3 +17,5 @@ final CantiqueCrudController = Provider((ref) => CantiqueController(ref));
 
 
 final fetchAllTest = FutureProvider<List<Cantique>>((ref)=>CantiqueController(ref).fetchAllTest());
+
+final fetchFavoriteCantique = FutureProvider<List<Cantique>>((ref)=>CantiqueController(ref).getFavoriteCantique());

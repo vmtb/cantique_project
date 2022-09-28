@@ -15,7 +15,7 @@ class Cantique {
       required this.contenu,
       required this.time});
 
-  Map<String, dynamic> toMap() {
+  Map<String,dynamic> toMap() {
     return {
       'id':id,
       'favorite': isFavourite,

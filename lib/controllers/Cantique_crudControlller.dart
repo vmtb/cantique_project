@@ -31,4 +31,16 @@ class CantiqueController {
 
     return models;
   }
+
+  Future<List<Cantique>> getFavoriteCantique() async {
+    List<Cantique> favoris = [];
+
+    for(Cantique cantique in listeDemoCatique) {
+      if (cantique.isFavourite) {
+        favoris.add(cantique);
+      }
+    }
+
+    return favoris;
+  }
 }
