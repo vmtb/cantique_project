@@ -1,5 +1,4 @@
 import 'package:cantique/components/app_text.dart';
-import 'package:cantique/controllers/Cantique_crudControlller.dart';
 import 'package:cantique/screens/simple_user/play_music.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:cantique/utils/app_styles.dart';
@@ -95,7 +94,12 @@ class _ListeLikedCantiqueState extends ConsumerState<ListeLikedCantique> {
               shrinkWrap: true,
               itemCount: data.length,
               separatorBuilder: (BuildContext context, int index) {
-                return const Divider();
+                return Container(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: getSize(context).width * 0.04),
+                  height: 0,
+                  color: Colors.grey,
+                );
               },
             );
           },

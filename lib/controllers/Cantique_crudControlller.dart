@@ -35,12 +35,56 @@ class CantiqueController {
   Future<List<Cantique>> getFavoriteCantique() async {
     List<Cantique> favoris = [];
 
-    for(Cantique cantique in listeDemoCatique) {
+    for (Cantique cantique in listeDemoCatique) {
       if (cantique.isFavourite) {
         favoris.add(cantique);
       }
     }
 
+    return favoris;
+  }
+
+  Future<List<Map<String, List<Cantique>>>> getAbcCantique() async {
+    List<Map<String, List<Cantique>>> favoris = [];
+    int indix = 0;
+    List<String> liste = [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "U",
+      "V",
+      "W",
+      "X",
+      "Y",
+      "Z"
+    ];
+    for (String str in liste) {
+      favoris.add({str: []});
+
+      for (Cantique cantique in listeDemoCatique) {
+        if (cantique.title.toUpperCase().startsWith(str)) {
+          favoris[indix][str]!.add(cantique);
+        }
+      }
+      indix++;
+    }
     return favoris;
   }
 }

@@ -157,7 +157,7 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
               height: 20,
             ),
             AppText(
-              "7- " + widget.cantique.title,
+              widget.cantique.id.toString() + "- " + widget.cantique.title,
               size: 25,
               color: getPrimaryColor(context),
               isNormal: false,

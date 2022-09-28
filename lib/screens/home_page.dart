@@ -1,5 +1,8 @@
 import 'package:cantique/components/app_button.dart';
+import 'package:cantique/screens/simple_user/liste_abc_cantique.dart';
 import 'package:cantique/screens/simple_user/liste_cantique.dart';
+import 'package:cantique/screens/simple_user/liste_favorite.dart';
+import 'package:cantique/screens/simple_user/recherche.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:cantique/utils/app_styles.dart';
@@ -68,6 +71,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                         controller: controller,
                         decoration: InputDecoration(
                           hintText: StringData.entrerNumero,
+                          hintStyle: TextStyle(
+                            color: getPrimaryColor(context),
+                          ),
+                          focusColor: getPrimaryColor(context),
                         ),
                       ),
                     ),
@@ -115,7 +122,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     InkWell(
                       borderRadius: BorderRadius.circular(20),
                       onTap: () {
-                        //navigateToNextPage(context, const ListeCantique());
+                        navigateToNextPage(context, const ListeLikedCantique());
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -141,50 +148,60 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: getBackCont(context),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.sort_by_alpha,
-                            size: 60,
-                            color: getWhite(context),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          AppText(
-                            "Sommaire",
-                            color: getWhite(context),
-                            size: 18,
-                          )
-                        ],
+                    InkWell(
+                      onTap: (() {
+                        navigateToNextPage(context, const ListeAbcCantique());
+                      }),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: getBackCont(context),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.sort_by_alpha,
+                              size: 60,
+                              color: getWhite(context),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            AppText(
+                              "Sommaire",
+                              color: getWhite(context),
+                              size: 18,
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: getBackCont(context),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.search,
-                            size: 60,
-                            color: getWhite(context),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          AppText(
-                            StringData.search,
-                            color: getWhite(context),
-                            size: 18,
-                          )
-                        ],
+                    InkWell(
+                      onTap: (() {
+                        navigateToNextPage(context, const RechercheCantique());
+                      }),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: getBackCont(context),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.search,
+                              size: 60,
+                              color: getWhite(context),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            AppText(
+                              StringData.search,
+                              color: getWhite(context),
+                              size: 18,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                     InkWell(
