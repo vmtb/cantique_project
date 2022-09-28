@@ -16,8 +16,7 @@ class AppStyles {
       indicatorColor:
           isDarkTheme ? const Color(0xff0E1D36) : const Color(0xffCBDCF8),
 
-      hintColor:
-          isDarkTheme ? const Color(0xff280C0B) : const Color(0xffEECED3),
+      hintColor: isDarkTheme ? Colors.white : Colors.black,
 
       //highlightColor: isDarkTheme ? const Color(0xff372901) : Colors.white,
 
@@ -88,8 +87,8 @@ Color getWhite(BuildContext context) {
   return Theme.of(context).primaryColor;
 }
 
-Color getBlack(BuildContext context) {
-  return Theme.of(context).backgroundColor;
+Color getBlack(BuildContext context){
+  return Theme.of(context).hintColor;
 }
 
 Color getPrimaryColor(BuildContext context) {
