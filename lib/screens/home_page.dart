@@ -43,16 +43,14 @@ class _HomePageState extends ConsumerState<HomePage> {
             icon: const Icon(Icons.light_mode_rounded),
           ),
           IconButton(
-            onPressed: (() {}),
-            icon: const Icon(Icons.menu),
-          ),
-          IconButton(
             onPressed: (() {
-              navigateToNextPage(context, const  LoginScreen());
-
-
+              navigateToNextPage(context, const LoginScreen());
             }),
             icon: const Icon(Icons.admin_panel_settings_outlined),
+          ),
+          IconButton(
+            onPressed: (() {}),
+            icon: const Icon(Icons.menu),
           ),
         ],
       ),
