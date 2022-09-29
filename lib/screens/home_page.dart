@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../components/app_text.dart';
+import 'cantique/loginscreen.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({
@@ -44,6 +45,14 @@ class _HomePageState extends ConsumerState<HomePage> {
           IconButton(
             onPressed: (() {}),
             icon: const Icon(Icons.menu),
+          ),
+          IconButton(
+            onPressed: (() {
+              navigateToNextPage(context, const  LoginScreen());
+
+
+            }),
+            icon: const Icon(Icons.admin_panel_settings_outlined),
           ),
         ],
       ),
