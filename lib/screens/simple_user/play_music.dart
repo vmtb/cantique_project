@@ -60,7 +60,6 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
 
   Future setAudio() async {
     String url = widget.cantique.songUrl;
-    //'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3';
     await audiPlayer.setUrl(url);
   }
 
@@ -266,9 +265,9 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
             IconButton(
                 onPressed: (() {
                   setState(() {
-                  scale -= 0.1;
-                  _controller1.value = Matrix4.identity()..scale(scale);
-                });
+                    scale -= 0.1;
+                    _controller1.value = Matrix4.identity()..scale(scale);
+                  });
                 }),
                 icon: Icon(
                   Icons.zoom_out,
