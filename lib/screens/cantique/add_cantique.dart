@@ -52,15 +52,12 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
                   onTap: () async {
-                    FilePickerResult? result = await FilePicker.platform.pickFiles(,
-                    type: FileType.custom,
-                    allowedExtensions: ['jpg', 'pdf', 'doc'],);
-
-                    if (result != null) {
-                      File file = File(result.files.single.path);
-                    } else {
-                      print("No file selected");
-                    }
+                    FilePickerResult? result = await FilePicker.platform.pickFiles();
+                     if (result == null) {
+                        print("No file selected");
+                      } else {
+                        print(result.files.single.name);
+                      }
 
 
 

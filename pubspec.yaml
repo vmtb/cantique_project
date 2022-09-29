@@ -30,7 +30,7 @@ dependencies:
   uuid:
   google_fonts:
   cached_network_image:
-  file_picker:
+  file_picker: ^5.2.0+1
   audioplayers: ^0.20.1
 
 
