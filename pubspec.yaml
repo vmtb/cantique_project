@@ -21,6 +21,7 @@ dependencies:
   firebase_storage:
 
 
+
   form_validator:
   timer_controller:
   shared_preferences:
@@ -31,6 +32,7 @@ dependencies:
   cached_network_image:
   file_picker:
   audioplayers: ^0.20.1
+
 
 
 

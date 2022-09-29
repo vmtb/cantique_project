@@ -11,6 +11,8 @@ import '../../utils/app_styles.dart';
 import '../../utils/providers.dart';
 import 'cantique_list.dart';
 
+import 'package:file_picker/file_picker.dart';
+
 class AddCantique extends ConsumerStatefulWidget {
   const AddCantique({
     Key? key,
@@ -49,8 +51,20 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
-                  onTap: () {
-                    print('Choix song');
+                  onTap: () async {
+                    FilePickerResult? result = await FilePicker.platform.pickFiles(,
+                    type: FileType.custom,
+                    allowedExtensions: ['jpg', 'pdf', 'doc'],);
+
+                    if (result != null) {
+                      File file = File(result.files.single.path);
+                    } else {
+                      print("No file selected");
+                    }
+
+
+
+
                   },
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
