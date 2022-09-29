@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cantique/components/app_input.dart';
 import 'package:cantique/utils/app_func.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validator/form_validator.dart';
@@ -27,6 +28,8 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
   final titleController = TextEditingController();
   late List<String> content = [];
   File? filePicked;
+  bool isLoading = false;
+  String fileName = "Cliquez pour changer la musique";
 
 
 
@@ -62,7 +65,7 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                     // } else {
                     //   print(result.files.single.name);
                     // }
-                    pickImage();
+                    pickFile();
                   },
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
@@ -81,7 +84,7 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                             size: 50,
                             color: getBlack(context),
                           ),
-                          const AppText("Cliquez pour changer la musique")
+                          AppText(fileName),
                         ],
                       ),
                     ),
@@ -281,20 +284,33 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
               ),
               ElevatedButton(
                   onPressed: () async {
-                    // print(content);
-                    // print(titleController.text);
-                    await ref
-                        .read(CantiqueCrudController)
-                        .saveToCantique(titleController.text, filePicked, content);
+                    if (filePicked == null) {
+                      showFlushBar(context, "Choix de fichier audio",
+                          "Veuillez sélectionner un fichier audio");
+                    } else {
+                      setState(() {
+                        isLoading = true;
+                      });
 
-                    ref.refresh(fetchAllTest);
-
-                    showFlushBar(context, "Message succes", "Ajout réussi");
-                    navigateToNextPage(context, const CantiqueList());
+                      await ref
+                          .read(CantiqueCrudController)
+                          .saveToCantique(
+                              titleController.text, filePicked, content)
+                          .then((value) {
+                        ref.refresh(fetchAllTest);
+                        setState(() {
+                          isLoading = false;
+                        });
+                        showFlushBar(context, "Message succes", "Ajout réussi");
+                        navigateToNextPage(context, const CantiqueList());
+                      });
+                    }
                   },
-                  child: Container(
-                    child: const Text("Ajouter Cantique"),
-                  ))
+                  child: isLoading
+                      ? CupertinoActivityIndicator(
+                          color: getWhite(context),
+                        )
+                      : const Text("Ajouter Cantique"))
             ],
           ),
         ),
@@ -306,14 +322,13 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
     return content.split(separator1);
   }
 
-  Future<void> pickImage() async {
+  Future<void> pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
       setState(() {
         filePicked = File(result.paths.first!);
+        fileName = filePicked.toString().split('/').last.split('\'').first;
       });
     }
   }
-  // FilePickerResult? result =
-  //                       await FilePicker.platform.pickFiles();
 }

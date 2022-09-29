@@ -317,8 +317,10 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
   Map<String, String> treatContent(contenu) {
     List<String> c = contenu.toString().split(separator2);
     if (c[0] == '0') {
-      return {couplet.toString(): c[1]};
+      couplet++;
+      return {(couplet-1).toString(): c[1]};
     }
+    
     return {"Refrain": c[1]};
   }
 }
