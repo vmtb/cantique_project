@@ -20,9 +20,6 @@ class CantiqueList extends ConsumerStatefulWidget {
     Key? key,
   }) : super(key: key);
 
-
-
-
   @override
   ConsumerState createState() => _CantiqueListState();
 }
