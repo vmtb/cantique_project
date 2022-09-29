@@ -9,12 +9,6 @@ import 'package:cantique/utils/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-<<<<<<< HEAD
-=======
-import '../../utils/app_styles.dart';
-import '../../utils/providers.dart';
-
->>>>>>> d825c43 (Mise en place de la fonctionnalité d'affichage)
 class CantiqueList extends ConsumerStatefulWidget {
   const CantiqueList({
     Key? key,
@@ -39,57 +33,12 @@ class _CantiqueListState extends ConsumerState<CantiqueList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-<<<<<<< HEAD
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
             //color: getWhite(context),
           ),
           onPressed: (() => Navigator.pop(context)),
-=======
-        title: AppText(
-          "Cantiques",
-          size: 18,
-          color: getWhite(context),
-          
-        ),
-        actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.search))
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-
-            ref.watch(fetchAllTest).when(
-                data: (data) {
-                  if (data.isEmpty) {
-                    return const Center(
-                      child: Text("No data"),
-                    );
-                  }
-
-                  return ListView.separated(
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(data[index].title),
-                        subtitle: Text(data[index].time),
-                      );
-                    },
-                    shrinkWrap: true,
-                    itemCount: data.length,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const Divider();
-                    },
-                  );
-                },
-                error: (err, stackErr) {
-                  print(stackErr!);
-                  return  Text(stackErr!.toString());
-                },
-                loading: () => const Center(child: CircularProgressIndicator())),
-          ],
->>>>>>> d825c43 (Mise en place de la fonctionnalité d'affichage)
         ),
         title: AppText(
           StringData.titleListe,
