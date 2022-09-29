@@ -25,10 +25,6 @@ final fetchAllTest = FutureProvider<List<Cantique>>(
 final fetchFavoriteCantique = FutureProvider<List<Cantique>>(
     (ref) => CantiqueController(ref).getFavoriteCantique());
 
-final fetchCantiqueByCategorie =
-    FutureProvider<List<Map<String, List<Cantique>>>>(
-        (ref) => CantiqueController(ref).getAbcCantique());
-
 //DatabaseReference ref = FirebaseDatabase.instance.ref("users/$phoneNumber/phones/${StringData.myIme}");
 Provider<DatabaseReference> databaseRef =
     Provider((ref) => FirebaseDatabase.instance.ref().child("CURRENT_ID"));
