@@ -1,4 +1,4 @@
-import 'package:cantique/screens/home_page.dart';
+import 'package:cantique/screens/admin_home_page.dart';
 import 'package:cantique/utils/app_styles.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppStyles.themeData(false, context),
       darkTheme: AppStyles.themeData(true, context),
-      home: const HomePage(),
+      home: const AdminHomePage(),
     );
   }
 }

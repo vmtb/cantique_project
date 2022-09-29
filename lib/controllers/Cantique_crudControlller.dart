@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:cantique/models/cantique.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../utils/providers.dart';
@@ -7,18 +9,30 @@ class CantiqueController {
   final Ref ref;
   CantiqueController(this.ref);
 
-  Future<void> saveToCantique(
-      String title, String urlSong, List content) async {
-    print("sds");
-    Cantique cantique = Cantique(
-        id: -1,
-        isFavourite: false,
-        title: title,
-        contenu: content,
-        songUrl: urlSong,
-        time: DateTime.now().toString());
-    print(cantique.toMap());
-    await ref.read(CantiqueDatasProvider).add(cantique.toMap());
+  Future<void> saveToCantique(String title, File? file, List content) async {
+    //print("sds");
+
+    await addFileToStorage(file!).then((value) async {
+      String url = value;
+      await getCurrentId().then((value) async {
+        Cantique cantique = Cantique(
+            id: value,
+            isFavourite: false,
+            title: title,
+            contenu: content,
+            songUrl: url,
+            time: DateTime.now().toString());
+
+        await ref.read(CantiqueDatasProvider).add(cantique.toMap());
+      });
+    });
+  }
+
+  Future<String> addFileToStorage(File file) async {
+    UploadTask task = ref.read(thumbStorageRef).putFile(file);
+    TaskSnapshot snapshot = await task.whenComplete(() => null);
+    String urlString = await snapshot.ref.getDownloadURL();
+    return urlString;
   }
 
   Future<List<Cantique>> fetchAllTest() async {
@@ -34,7 +48,6 @@ class CantiqueController {
 
   Future<List<Cantique>> getFavoriteCantique() async {
     List<Cantique> favoris = [];
-
     for (Cantique cantique in listeDemoCatique) {
       if (cantique.isFavourite) {
         favoris.add(cantique);
@@ -87,5 +100,19 @@ class CantiqueController {
     }
     return favoris;
   }
-  
+
+  Future<int> getCurrentId() async {
+    int myId = 0;
+    final snapshot = await ref.read(databaseRef).get();
+
+    if (snapshot.exists) {
+      Map<dynamic, dynamic> json = snapshot.value as Map<dynamic, dynamic>;
+      myId = json['id']! + 1;
+      ref.read(databaseRef).set({"id": myId});
+    } else {
+      ref.read(databaseRef).set({"id": 0});
+    }
+
+    return myId;
+  }
 }
