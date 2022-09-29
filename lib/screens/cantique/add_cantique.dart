@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cantique/components/app_input.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +27,8 @@ class AddCantique extends ConsumerStatefulWidget {
 class _AddCantiqueState extends ConsumerState<AddCantique> {
   final titleController = TextEditingController();
   late List<String> content = [];
+
+
 
   @override
   void initState() {
@@ -56,8 +60,14 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                      if (result == null) {
                         print("No file selected");
                       } else {
-                        print(result.files.single.name);
-                      }
+                       final file=result.files.single.path;
+
+                       var uploadTask=ref.watch(thumbStorageRef).putFile(File(file!));
+                        final snapshot=await uploadTask!.whenComplete(() => {});
+                        final urlDownald=await snapshot.ref.getDownloadURL();
+                        print(urlDownald);
+                     }
+
 
 
 
