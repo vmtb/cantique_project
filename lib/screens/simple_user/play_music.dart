@@ -63,6 +63,8 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
     await audiPlayer.setUrl(url);
   }
 
+  int couplet = 1;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,7 +179,8 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
             ),
             ...List.generate(widget.cantique.contenu.length, (index) {
               Map<String, String> data =
-                  widget.cantique.contenu[index] as Map<String, String>;
+                  treatContent(widget.cantique.contenu[index]);
+
               String key = data.keys.first;
               String content = data.values.first;
               return Column(
@@ -309,5 +312,13 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
         '${(seconds / 60).floor() < 10 ? 0 : ''}${(seconds / 60).floor()}';
     String secondString = '${seconds % 60 < 10 ? 0 : ''}${seconds % 60}';
     return '$minuteString:$secondString';
+  }
+
+  Map<String, String> treatContent(contenu) {
+    List<String> c = contenu.toString().split(separator2);
+    if (c[0] == '0') {
+      return {couplet.toString(): c[1]};
+    }
+    return {"Refrain": c[1]};
   }
 }

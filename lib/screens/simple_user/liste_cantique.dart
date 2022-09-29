@@ -4,6 +4,7 @@ import 'package:cantique/screens/simple_user/play_music.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:cantique/utils/app_styles.dart';
+import 'package:cantique/utils/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,7 +24,7 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
     super.dispose();
   }
 
-  List<Cantique> liste = listeDemoCatique;
+  List<Cantique> liste = [];
 
   @override
   Widget build(BuildContext context) {
@@ -80,70 +81,88 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
             height: 15,
           ),
           Expanded(
-            child: ListView.separated(
-              itemBuilder: ((context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    navigateToNextPage(
-                        context,
-                        PlayMusics(
-                          cantique: liste[index],
-                        ));
-                  },
-                  child: Container(
-                    margin: EdgeInsets.symmetric(
-                        horizontal: getSize(context).width * 0.04),
-                    height: 50,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      //color: Colors.green[100],
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CircleAvatar(
-                                backgroundColor: getBackCont(context),
-                                radius: 15,
-                                child: AppText(
-                                  (index + 1).toString(),
-                                  color: getWhite(context),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ),
-                            AppText(
-                              liste[index].title,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.play_arrow,
-                            color: getBackCont(context),
-                            size: 25,
+            child: ref.watch(fetchAllTest).when(
+                data: ((data) {
+                  setState(() {
+                    liste = data;
+                  });
+                  if (data.isEmpty) {
+                    return const Center(
+                      child: Text("No data found"),
+                    );
+                  }
+                  return ListView.separated(
+                    itemBuilder: ((context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          navigateToNextPage(
+                              context,
+                              PlayMusics(
+                                cantique: liste[index],
+                              ));
+                        },
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: getSize(context).width * 0.04),
+                          height: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            //color: Colors.green[100],
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }),
-              separatorBuilder: ((context, index) => Container(
-                    margin: EdgeInsets.symmetric(
-                        horizontal: getSize(context).width * 0.04),
-                    height: 0,
-                    color: Colors.grey,
-                  )),
-              itemCount: liste.length,
-            ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CircleAvatar(
+                                      backgroundColor: getBackCont(context),
+                                      radius: 15,
+                                      child: AppText(
+                                        (liste[index].id).toString(),
+                                        color: getWhite(context),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                  AppText(
+                                    liste[index].title,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.play_arrow,
+                                  color: getBackCont(context),
+                                  size: 25,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                    separatorBuilder: ((context, index) => Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: getSize(context).width * 0.04),
+                          height: 0,
+                          color: Colors.grey,
+                        )),
+                    itemCount: liste.length,
+                  );
+                }),
+                error: (err, stackErr) {
+                  print(stackErr!);
+                  return const Text("Something is wrong...");
+                },
+                loading: (() => const Center(
+                      child: CircularProgressIndicator(),
+                    ))),
           ),
         ],
       ),

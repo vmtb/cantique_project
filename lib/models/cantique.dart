@@ -4,7 +4,7 @@ class Cantique {
   String title = "";
   String songUrl = "";
   String time = "";
-  List contenu = [];
+  List<dynamic> contenu = [];
 
   Cantique(
       {
@@ -33,7 +33,7 @@ class Cantique {
       title: map['title'] as String,
       time: map['time'] as String,
       songUrl: map['songUrl'] as String,
-      contenu: map['contenu'] as List,
+      contenu: map['contenu'] as List<dynamic>,
     );
   }
 }
