@@ -5,7 +5,6 @@ import 'package:cantique/screens/simple_user/play_music.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:cantique/utils/app_styles.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:cantique/utils/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,9 +13,6 @@ class CantiqueList extends ConsumerStatefulWidget {
   const CantiqueList({
     Key? key,
   }) : super(key: key);
-
-
-
 
   @override
   ConsumerState createState() => _CantiqueListState();
