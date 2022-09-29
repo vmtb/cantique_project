@@ -44,8 +44,6 @@ class _LoginScreenState extends State<LoginScreen> {
               TextFormField(
                 controller: pseudoController,
 
-
-
                 decoration: InputDecoration(
                   hintText: "Pseudo",
 
