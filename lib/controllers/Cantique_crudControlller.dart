@@ -87,4 +87,5 @@ class CantiqueController {
     }
     return favoris;
   }
+  
 }
