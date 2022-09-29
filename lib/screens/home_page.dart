@@ -52,6 +52,14 @@ class _HomePageState extends ConsumerState<HomePage> {
             onPressed: (() {}),
             icon: const Icon(Icons.menu),
           ),
+          IconButton(
+            onPressed: (() {
+              navigateToNextPage(context, const  LoginScreen());
+
+
+            }),
+            icon: const Icon(Icons.admin_panel_settings_outlined),
+          ),
         ],
       ),
       body: SafeArea(
