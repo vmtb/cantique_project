@@ -35,7 +35,7 @@ class CantiqueController {
     return urlString;
   }
 
-  Future<List<Cantique>> fetchAllTest() async {
+  Future<List<Cantique>> fetchAllTest1() async {
     List<Cantique> models = [];
     await ref.read(CantiqueDatasProvider).get().then((value) {
       for (var element in value.docs) {
@@ -48,12 +48,15 @@ class CantiqueController {
 
   Future<List<Cantique>> getFavoriteCantique() async {
     List<Cantique> favoris = [];
-    for (Cantique cantique in listeDemoCatique) {
-      if (cantique.isFavourite) {
-        favoris.add(cantique);
-      }
-    }
-
+    ref.watch(fetchAllTest).whenData(
+      (value) {
+        for (Cantique cantique in value) {
+          if (cantique.isFavourite) {
+            favoris.add(cantique);
+          }
+        }
+      },
+    );
     return favoris;
   }
 
@@ -88,16 +91,22 @@ class CantiqueController {
       "Y",
       "Z"
     ];
-    for (String str in liste) {
-      favoris.add({str: []});
 
-      for (Cantique cantique in listeDemoCatique) {
-        if (cantique.title.toUpperCase().startsWith(str)) {
-          favoris[indix][str]!.add(cantique);
+    ref.watch(fetchAllTest).whenData(
+      (value) {
+        for (String str in liste) {
+          favoris.add({str: []});
+
+          for (Cantique cantique in value) {
+            if (cantique.title.toUpperCase().startsWith(str)) {
+              favoris[indix][str]!.add(cantique);
+            }
+          }
+          indix++;
         }
-      }
-      indix++;
-    }
+      },
+    );
+
     return favoris;
   }
 

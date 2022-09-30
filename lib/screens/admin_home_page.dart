@@ -1,8 +1,8 @@
 import 'package:cantique/components/app_text.dart';
 import 'package:cantique/screens/cantique/cantique_list.dart';
+import 'package:cantique/screens/simple_user/liste_abc_cantique.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:cantique/utils/app_styles.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,7 +20,11 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: AppText("Administration", size: 18, color: getWhite(context),),
+        title: AppText(
+          "Administration",
+          size: 18,
+          color: getWhite(context),
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -36,36 +40,59 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
               children: [
                 InkWell(
                   borderRadius: BorderRadius.circular(20),
-                  onTap: (){
+                  onTap: () {
                     navigateToNextPage(context, const CantiqueList());
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: getBackCont(context),
-                      borderRadius: BorderRadius.circular(20)
-                    ),
+                        color: getBackCont(context),
+                        borderRadius: BorderRadius.circular(20)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.list_alt, size: 60,color: getWhite(context),),
-                        const SizedBox(height: 10,),
-                        AppText("Cantiques", color: getWhite(context), size: 18,)
+                        Icon(
+                          Icons.list_alt,
+                          size: 60,
+                          color: getWhite(context),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        AppText(
+                          "Cantiques",
+                          color: getWhite(context),
+                          size: 18,
+                        )
                       ],
                     ),
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: getBackCont(context),
-                      borderRadius: BorderRadius.circular(20)
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.sort_by_alpha, size: 60,color: getWhite(context),),
-                      const SizedBox(height: 10,),
-                      AppText("Sommaire", color: getWhite(context), size: 18,)
-                    ],
+                InkWell(
+                  onTap: (() {
+                    navigateToNextPage(context, const ListeAbcCantique());
+                  }),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: getBackCont(context),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.sort_by_alpha,
+                          size: 60,
+                          color: getWhite(context),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        AppText(
+                          "Sommaire",
+                          color: getWhite(context),
+                          size: 18,
+                        )
+                      ],
+                    ),
                   ),
                 )
               ],
