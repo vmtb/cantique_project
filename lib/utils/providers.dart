@@ -29,3 +29,6 @@ Provider<DatabaseReference> databaseRef =
 final fetchCantiqueByCategorie =
     FutureProvider<List<Map<String, List<Cantique>>>>(
         (ref) => CantiqueController(ref).getAbcCantique());
+
+final fetchCantiqueById =
+    FutureProvider<Cantique?>((ref) => CantiqueController(ref).searchCantique());

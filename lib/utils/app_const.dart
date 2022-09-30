@@ -20,7 +20,7 @@ class StringData {
   static String lyrics = "Lyrics";
   static String tableAlpha = "Table Alphabétique";
   static String rechercheCantique = "";
-//   static String var1 = "";
+  static int id = 1;
 //   static String var1 = "";
 //   static String var1 = "";
 //   static String var1 = "";

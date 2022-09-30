@@ -4,6 +4,7 @@ import 'package:cantique/models/cantique.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:cantique/utils/app_styles.dart';
+import 'package:cantique/utils/providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +31,7 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
     controller.dispose();
     audiPlayer.dispose();
     _controller1.dispose();
+    
     super.dispose();
   }
 
@@ -260,7 +262,19 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             IconButton(
-                onPressed: (() {}),
+                onPressed: (() {
+                  StringData.id = widget.cantique.id - 1;
+                  ref.read(fetchCantiqueById).whenData((value) {
+                    if (value is Cantique) {
+                      setState(() {
+                        widget.cantique = value;
+                      });
+                    } else {
+                      showFlushBar(context, "Recherche",
+                          "Vous êtes sur la première cantique");
+                    }
+                  });
+                }),
                 icon: Icon(
                   Icons.arrow_back_ios,
                   color: getWhite(context),
@@ -293,7 +307,20 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
               color: getWhite(context),
             ),
             IconButton(
-              onPressed: (() {}),
+              onPressed: (() {
+                StringData.id = widget.cantique.id + 1;
+                ref.read(fetchCantiqueById)
+                    .whenData((value) {
+                  if (value is Cantique) {
+                    setState(() {
+                      widget.cantique = value;
+                    });
+                  } else {
+                    showFlushBar(context, "Recherche",
+                        "Vous êtes sur la dernière cantique");
+                  }
+                });
+              }),
               icon: Icon(
                 Icons.arrow_forward_ios,
                 color: getWhite(context),
@@ -318,9 +345,9 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
     List<String> c = contenu.toString().split(separator2);
     if (c[0] == '0') {
       couplet++;
-      return {(couplet-1).toString(): c[1]};
+      return {(couplet - 1).toString(): c[1]};
     }
-    
+
     return {"Refrain": c[1]};
   }
 }

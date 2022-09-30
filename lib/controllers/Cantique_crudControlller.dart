@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cantique/models/cantique.dart';
+import 'package:cantique/utils/app_const.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -123,5 +124,16 @@ class CantiqueController {
     }
 
     return myId;
+  }
+
+  Future<Cantique?> searchCantique() async {
+    ref.watch(fetchAllTest).whenData((value) {
+      for (Cantique cantique in value) {
+        if (cantique.id == StringData.id) {
+          return cantique;
+        }
+      }
+    });
+    return null;
   }
 }

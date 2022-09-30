@@ -1,11 +1,14 @@
 import 'package:cantique/components/app_button.dart';
+import 'package:cantique/models/cantique.dart';
 import 'package:cantique/screens/simple_user/liste_abc_cantique.dart';
 import 'package:cantique/screens/simple_user/liste_cantique.dart';
 import 'package:cantique/screens/simple_user/liste_favorite.dart';
+import 'package:cantique/screens/simple_user/play_music.dart';
 import 'package:cantique/screens/simple_user/recherche.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:cantique/utils/app_styles.dart';
+import 'package:cantique/utils/providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,9 +30,12 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   void dispose() {
+    isLoading = false;
     controller.dispose();
     super.dispose();
   }
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +81,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       height: 60,
                       width: getSize(context).width * 0.6,
                       child: TextFormField(
+                        keyboardType: TextInputType.number,
                         controller: controller,
                         decoration: InputDecoration(
                           hintText: StringData.entrerNumero,
@@ -91,29 +98,63 @@ class _HomePageState extends ConsumerState<HomePage> {
                     AppButton(
                       height: 35,
                       width: 75,
-                      child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: AppText(
-                                StringData.go,
-                                color: getWhite(context),
-                                isNormal: false,
-                                size: 20,
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 1.0, top: 1),
-                              child: Icon(
-                                CupertinoIcons.forward,
-                                color: getWhite(context),
-                              ),
-                            ),
-                          ]),
-                      onTap: () => log("go button taped"),
+                      child: isLoading
+                          ? CupertinoActivityIndicator(
+                              color: getWhite(context),
+                            )
+                          : Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: AppText(
+                                      StringData.go,
+                                      color: getWhite(context),
+                                      isNormal: false,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 1.0, top: 1),
+                                    child: Icon(
+                                      CupertinoIcons.forward,
+                                      color: getWhite(context),
+                                    ),
+                                  ),
+                                ]),
+                      onTap: () async {
+                        print("go pressed");
+                        if (controller.text != "" &&
+                            int.tryParse(controller.text) != null) {
+                          print("go pressed OKKK");
+
+                          setState(() {
+                            isLoading = true;
+                          });
+                          StringData.id = int.parse(controller.text);
+                          ref.read(fetchCantiqueById).whenData((value) {
+                            if (value is Cantique) {
+                              setState(() {
+                                isLoading = false;
+                              });
+                              navigateToNextPage(
+                                  context, PlayMusics(cantique: value));
+                            } else {
+                              showFlushBar(context, "Recherche",
+                                  "Veuillez saisir un numero valide");
+                              setState(() {
+                                isLoading = false;
+                              });
+                            }
+                          });
+                        } else {
+                          print("go pressed Noooo");
+                          showFlushBar(context, "Recherche",
+                              "Veuillez saisir un numero valide");
+                        }
+                      },
                     ),
                   ],
                 ),

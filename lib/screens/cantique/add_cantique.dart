@@ -12,11 +12,6 @@ import '../../utils/app_const.dart';
 import '../../utils/app_styles.dart';
 import '../../utils/providers.dart';
 import 'cantique_list.dart';
-import 'dart:io';
-import 'package:file_picker/file_picker.dart';
-
-import 'package:file_picker/file_picker.dart';
-
 import 'package:file_picker/file_picker.dart';
 
 class AddCantique extends ConsumerStatefulWidget {
@@ -34,8 +29,6 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
   File? filePicked;
   bool isLoading = false;
   String fileName = "Cliquez pour changer la musique";
-
-
 
   @override
   void initState() {
