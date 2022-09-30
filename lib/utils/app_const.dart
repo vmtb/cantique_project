@@ -21,7 +21,8 @@ class StringData {
   static String tableAlpha = "Table Alphabétique";
   static String rechercheCantique = "";
   static int id = 1;
-//   static String var1 = "";
+  static int couplet = 0;
+
 //   static String var1 = "";
 //   static String var1 = "";
 //   static String var1 = "";

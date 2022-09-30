@@ -31,7 +31,7 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
     controller.dispose();
     audiPlayer.dispose();
     _controller1.dispose();
-    
+
     super.dispose();
   }
 
@@ -309,8 +309,7 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
             IconButton(
               onPressed: (() {
                 StringData.id = widget.cantique.id + 1;
-                ref.read(fetchCantiqueById)
-                    .whenData((value) {
+                ref.read(fetchCantiqueById).whenData((value) {
                   if (value is Cantique) {
                     setState(() {
                       widget.cantique = value;
@@ -344,8 +343,9 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
   Map<String, String> treatContent(contenu) {
     List<String> c = contenu.toString().split(separator2);
     if (c[0] == '0') {
-      couplet++;
-      return {(couplet - 1).toString(): c[1]};
+      couplet ++;
+      int val = couplet;
+      return {(val - 1).toString(): c[1]};
     }
 
     return {"Refrain": c[1]};
