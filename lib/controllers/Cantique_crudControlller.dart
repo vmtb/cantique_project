@@ -112,7 +112,7 @@ class CantiqueController {
   }
 
   Future<int> getCurrentId() async {
-    int myId = 0;
+    int myId = 1;
     final snapshot = await ref.read(databaseRef).get();
 
     if (snapshot.exists) {
@@ -120,7 +120,7 @@ class CantiqueController {
       myId = json['id']! + 1;
       ref.read(databaseRef).set({"id": myId});
     } else {
-      ref.read(databaseRef).set({"id": 0});
+      ref.read(databaseRef).set({"id": 1});
     }
 
     return myId;
