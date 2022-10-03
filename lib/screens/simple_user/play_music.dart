@@ -228,28 +228,82 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                backgroundColor: getBlack(context),
-                radius: 30,
-                child: Center(
-                  child: IconButton(
-                    icon: Icon(
-                      isPlaying ? Icons.pause : Icons.play_arrow,
-                      color: getWhite(context),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    backgroundColor: !isPlaying ? Colors.green : Colors.grey,
+                    radius: 30,
+                    child: Center(
+                      child: IconButton(
+                        icon: Icon(
+                          //isPlaying ? Icons.pause :
+                          Icons.play_arrow,
+                          color: getWhite(context),
+                        ),
+                        iconSize: 50,
+                        onPressed: (() async {
+                          if (!isPlaying) {
+                            await audiPlayer.resume();
+                          }
+                          // if (isPlaying) {
+                          //   await audiPlayer.pause();
+                          // } else {
+                          //   await audiPlayer.resume();
+                          // }
+                        }),
+                      ),
                     ),
-                    iconSize: 50,
-                    onPressed: (() async {
-                      if (isPlaying) {
-                        await audiPlayer.pause();
-                      } else {
-                        await audiPlayer.resume();
-                      }
-                    }),
                   ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    backgroundColor:
+                        isPlaying ? getBackCont(context) : Colors.grey,
+                    radius: 30,
+                    child: Center(
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.pause, //: Icons.play_arrow,
+                          color: getWhite(context),
+                        ),
+                        iconSize: 50,
+                        onPressed: (() async {
+                          if (isPlaying) {
+                            await audiPlayer.pause();
+                          }
+                        }),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    backgroundColor: (isPlaying || position.inSeconds != 0)
+                        ? Colors.red
+                        : Colors.grey,
+                    radius: 30,
+                    child: Center(
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.square,
+                          color: getWhite(context),
+                        ),
+                        iconSize: 40,
+                        onPressed: (() async {
+                          if (isPlaying || position.inSeconds != 0) {
+                            await audiPlayer.seek(const Duration(seconds: 0));
+                          }
+                        }),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             )
           ]),
         ),
@@ -343,7 +397,7 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
   Map<String, String> treatContent(contenu) {
     List<String> c = contenu.toString().split(separator2);
     if (c[0] == '0') {
-      couplet ++;
+      couplet++;
       int val = couplet;
       return {(val - 1).toString(): c[1]};
     }
