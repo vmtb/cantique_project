@@ -37,7 +37,9 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
 
   @override
   void initState() {
+    
     setAudio();
+
     audiPlayer.onPlayerStateChanged.listen((event) {
       setState(() {
         isPlaying = event == PlayerState.PLAYING;
@@ -64,8 +66,6 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
     String url = widget.cantique.songUrl;
     await audiPlayer.setUrl(url);
   }
-
-  int couplet = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -209,102 +209,117 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
             const SizedBox(
               height: 20,
             ),
-            Slider(
-                min: 0,
-                max: duration.inSeconds.toDouble(),
-                value: position.inSeconds.toDouble(),
-                onChanged: ((value) async {
-                  final position = Duration(seconds: value.toInt());
-                  await audiPlayer.seek(position);
-                  await audiPlayer.resume();
-                })),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AppText(formatTime(position)),
-                  AppText(formatTime(duration - position)),
+                  Text(formatTime(position)),
+                  Slider(
+                      min: 0,
+                      max: duration.inSeconds.toDouble(),
+                      value: position.inSeconds.toDouble(),
+                      onChanged: ((value) async {
+                        final position = Duration(seconds: value.toInt());
+                        await audiPlayer.seek(position);
+                        await audiPlayer.resume();
+                      })),
+                  Text(formatTime(duration - position)),
                 ],
               ),
+            ),
+            const SizedBox(
+              height: 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircleAvatar(
-                    backgroundColor: !isPlaying ? Colors.green : Colors.grey,
-                    radius: 30,
-                    child: Center(
-                      child: IconButton(
-                        icon: Icon(
-                          //isPlaying ? Icons.pause :
-                          Icons.play_arrow,
-                          color: getWhite(context),
-                        ),
-                        iconSize: 50,
-                        onPressed: (() async {
-                          if (!isPlaying) {
-                            await audiPlayer.resume();
-                          }
-                          // if (isPlaying) {
-                          //   await audiPlayer.pause();
-                          // } else {
-                          //   await audiPlayer.resume();
-                          // }
-                        }),
-                      ),
+                InkWell(
+                  onTap: (() async {
+                    if (!isPlaying) {
+                      await audiPlayer.resume();
+                    }
+                  }),
+                  child: Container(
+                    height: 30,
+                    width: 70,
+                    padding: const EdgeInsets.only(
+                      bottom: 8,
+                      top: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: !isPlaying ? Colors.green : Colors.grey,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    //child: IconButton(
+                    child: Icon(
+                      Icons.play_arrow,
+                      color: getWhite(context),
+                      size: 20,
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircleAvatar(
-                    backgroundColor:
-                        isPlaying ? getBackCont(context) : Colors.grey,
-                    radius: 30,
-                    child: Center(
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.pause, //: Icons.play_arrow,
-                          color: getWhite(context),
-                        ),
-                        iconSize: 50,
-                        onPressed: (() async {
-                          if (isPlaying) {
-                            await audiPlayer.pause();
-                          }
-                        }),
-                      ),
+                InkWell(
+                  onTap: (() async {
+                    if (isPlaying) {
+                      await audiPlayer.pause();
+                    }
+                  }),
+                  child: Container(
+                    height: 30,
+                    width: 70,
+                    padding: const EdgeInsets.only(
+                      bottom: 8,
+                      top: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isPlaying ? getBackCont(context) : Colors.grey,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    //child: IconButton(
+                    child: Icon(
+                      Icons.pause,
+                      color: getWhite(context),
+                      size: 20,
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircleAvatar(
-                    backgroundColor: (isPlaying || position.inSeconds != 0)
-                        ? Colors.red
-                        : Colors.grey,
-                    radius: 30,
-                    child: Center(
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.square,
-                          color: getWhite(context),
-                        ),
-                        iconSize: 40,
-                        onPressed: (() async {
-                          if (isPlaying || position.inSeconds != 0) {
-                            await audiPlayer.seek(const Duration(seconds: 0));
-                          }
-                        }),
-                      ),
+                InkWell(
+                  onTap: (() async {
+                    if (isPlaying || position.inSeconds != 0) {
+                      await audiPlayer.seek(const Duration(seconds: 0));
+                      await audiPlayer.pause();
+                    }
+                  }),
+                  child: Container(
+                    height: 30,
+                    width: 70,
+                    padding: const EdgeInsets.only(
+                      bottom: 8,
+                      top: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: (isPlaying || position.inSeconds != 0)
+                          ? Colors.red
+                          : Colors.grey,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    //child: IconButton(
+                    child: Icon(
+                      Icons.square,
+                      color: getWhite(context),
+                      size: 20,
                     ),
                   ),
                 ),
               ],
-            )
+            ),
+            const SizedBox(
+              height: 20,
+            ),
           ]),
         ),
       ),
@@ -396,10 +411,8 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
 
   Map<String, String> treatContent(contenu) {
     List<String> c = contenu.toString().split(separator2);
-    if (c[0] == '0') {
-      couplet++;
-      int val = couplet;
-      return {(val - 1).toString(): c[1]};
+    if (int.tryParse(c[0]) is int) {
+      return {(int.tryParse(c[0])).toString(): c[1]};
     }
 
     return {"Refrain": c[1]};

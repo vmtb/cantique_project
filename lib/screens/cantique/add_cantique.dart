@@ -29,6 +29,7 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
   File? filePicked;
   bool isLoading = false;
   String fileName = "Cliquez pour changer la musique";
+  int couplet = 1;
 
   @override
   void initState() {
@@ -157,7 +158,11 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                                 )
                               ],
                               onChanged: (e_) {
-                                index = e_ == "Refrain" ? "Refrain" : "0";
+                                index =
+                                    e_ == "Refrain" ? "Refrain" : "$couplet";
+                                if (e_ != "Refrain") {
+                                  couplet++;
+                                }
                                 part = index + separator2 + cant;
                                 content[e] = part;
                                 setState(() {});

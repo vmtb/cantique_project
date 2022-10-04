@@ -10,7 +10,7 @@ Provider<FirebaseAuth> mAuthRef = Provider((ref) => FirebaseAuth.instance);
 Provider<CollectionReference> userRef =
     Provider((ref) => FirebaseFirestore.instance.collection("Users"));
 Provider<Reference> thumbStorageRef =
-    Provider((ref) => FirebaseStorage.instance.ref().child("Audios"));
+    Provider((ref) => FirebaseStorage.instance.ref().child("Audios").child(DateTime.now().toString()));
 
 final CantiqueDatasProvider =
     Provider((ref) => FirebaseFirestore.instance.collection("Cantiques"));
