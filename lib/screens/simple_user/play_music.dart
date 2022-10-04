@@ -37,7 +37,6 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
 
   @override
   void initState() {
-    
     setAudio();
 
     audiPlayer.onPlayerStateChanged.listen((event) {
