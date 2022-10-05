@@ -14,7 +14,7 @@ class StringData {
   static String favorite = "Favoris";
   static String search = "Recherche";
   static String cantique = "Cantiques";
-  static String copyRight = "Copyright: LIS - 2020";
+  static String copyRight = "Copyright: πRC - 2022";
   static String titleListe = "Tous les Cantiques";
   static String hintSearchByTitle = "Entrer le titre";
   static String lyrics = "Lyrics";

@@ -96,13 +96,13 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                   controller: titleController,
                   label: "Titre du cantique",
                   validationBuilder: ValidationBuilder()),
-              const SizedBox(
-                height: 10,
-              ),
-              AppInput(
-                  controller: titleController,
-                  label: "Mélodie",
-                  validationBuilder: ValidationBuilder()),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              // AppInput(
+              //     controller: titleController,
+              //     label: "Mélodie",
+              //     validationBuilder: ValidationBuilder()),
               const SizedBox(
                 height: 10,
               ),
@@ -286,6 +286,10 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
               ),
               ElevatedButton(
                   onPressed: () async {
+                    if(titleController.text.trim().isEmpty){
+                      showFlushBar(context, "Information", "Le titre est requis...");
+                      return;
+                    }
                     if (filePicked == null) {
                       showFlushBar(context, "Choix de fichier audio",
                           "Veuillez sélectionner un fichier audio");

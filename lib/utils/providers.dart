@@ -7,28 +7,21 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Provider<FirebaseAuth> mAuthRef = Provider((ref) => FirebaseAuth.instance);
-Provider<CollectionReference> userRef =
-    Provider((ref) => FirebaseFirestore.instance.collection("Users"));
-Provider<Reference> thumbStorageRef =
-    Provider((ref) => FirebaseStorage.instance.ref().child("Audios").child(DateTime.now().toString()));
 
-final CantiqueDatasProvider =
-    Provider((ref) => FirebaseFirestore.instance.collection("Cantiques"));
+Provider<CollectionReference> userRef = Provider((ref) => FirebaseFirestore.instance.collection("Users"));
+
+Provider<Reference> thumbStorageRef =  Provider((ref) => FirebaseStorage.instance.ref().child("Audios").child(DateTime.now().toString()));
+
+final CantiqueDatasProvider = Provider((ref) => FirebaseFirestore.instance.collection("Cantiques"));
+
 final CantiqueCrudController = Provider((ref) => CantiqueController(ref));
 
-final fetchAllTest = FutureProvider<List<Cantique>>(
-    (ref) => CantiqueController(ref).fetchAllTest1());
+final fetchAllTest = FutureProvider<List<Cantique>>((ref) => CantiqueController(ref).fetchAllTest1());
 
-final fetchFavoriteCantique = FutureProvider<List<Cantique>>(
-    (ref) => CantiqueController(ref).getFavoriteCantique());
-
+final fetchFavoriteCantique = FutureProvider<List<Cantique>>((ref) => CantiqueController(ref).getFavoriteCantique());
 //DatabaseReference ref = FirebaseDatabase.instance.ref("users/$phoneNumber/phones/${StringData.myIme}");
-Provider<DatabaseReference> databaseRef =
-    Provider((ref) => FirebaseDatabase.instance.ref().child("CURRENT_ID"));
+Provider<DatabaseReference> databaseRef = Provider((ref) => FirebaseDatabase.instance.ref().child("CURRENT_ID"));
 
-final fetchCantiqueByCategorie =
-    FutureProvider<List<Map<String, List<Cantique>>>>(
-        (ref) => CantiqueController(ref).getAbcCantique());
+final fetchCantiqueByCategorie = FutureProvider<List<Map<String, List<Cantique>>>>((ref) => CantiqueController(ref).getAbcCantique());
 
-final fetchCantiqueById =
-    FutureProvider<Cantique?>((ref) => CantiqueController(ref).searchCantique());
+final fetchCantiqueById = FutureProvider<Cantique?>((ref) => CantiqueController(ref).searchCantique());

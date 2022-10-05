@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cantique/models/cantique.dart';
 import 'package:cantique/utils/app_const.dart';
+import 'package:cantique/utils/app_func.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -38,7 +39,7 @@ class CantiqueController {
 
   Future<List<Cantique>> fetchAllTest1() async {
     List<Cantique> models = [];
-    await ref.read(CantiqueDatasProvider).get().then((value) {
+    await ref.read(CantiqueDatasProvider).orderBy("id", descending: false).get().then((value) {
       for (var element in value.docs) {
         models.add(Cantique.fromMap(element.data()));
       }
@@ -126,14 +127,32 @@ class CantiqueController {
     return myId;
   }
 
+  // Future<Cantique?> searchCantique() async {
+  //   ref.watch(fetchAllTest).whenData((value) {
+  //     for (Cantique cantique in value) {
+  //       if (cantique.id == StringData.id) {
+  //         return cantique;
+  //       }
+  //     }
+  //   });
+  //   return null;
+  // }
   Future<Cantique?> searchCantique() async {
-    ref.watch(fetchAllTest).whenData((value) {
-      for (Cantique cantique in value) {
-        if (cantique.id == StringData.id) {
-          return cantique;
-        }
+    log("Searching...");
+    try {
+      List<Cantique>? value  = ref.read(fetchAllTest).value;
+      List<Cantique> filtered = value!.where((element) => element.id==StringData.id).toList();
+      if(filtered.isNotEmpty){
+        return filtered[0];
       }
-    });
+    } catch (e) {
+      log(e);
+    }
     return null;
+  }
+
+  Future<Cantique?> getResultOfSearchById() async {
+    await ref.refresh(fetchCantiqueById);
+    return ref.read(fetchCantiqueById).value;
   }
 }

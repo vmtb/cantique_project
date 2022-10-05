@@ -29,33 +29,14 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
   @override
   void dispose() {
     controller.dispose();
-    audiPlayer.dispose();
     _controller1.dispose();
-
+    audiPlayer.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
-    setAudio();
 
-    audiPlayer.onPlayerStateChanged.listen((event) {
-      setState(() {
-        isPlaying = event == PlayerState.PLAYING;
-      });
-    });
-
-    audiPlayer.onDurationChanged.listen((event) {
-      setState(() {
-        duration = event;
-      });
-    });
-
-    audiPlayer.onAudioPositionChanged.listen((event) {
-      setState(() {
-        position = event;
-      });
-    });
     super.initState();
   }
 
@@ -63,11 +44,31 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
 
   Future setAudio() async {
     String url = widget.cantique.songUrl;
-    await audiPlayer.setUrl(url);
+    await audiPlayer.setUrl(url, isLocal: false);
+
+    audiPlayer.onPlayerStateChanged.listen((event) {
+      setState(() {
+        isPlaying = event == PlayerState.PLAYING;
+      });
+    });
+
+   audiPlayer.onDurationChanged.listen((event) {
+     setState(() {
+       duration = event;
+     });
+   });
+    audiPlayer.onAudioPositionChanged.listen((event)   {
+      setState(() {
+        position = event;
+      });
+    });
+
+
   }
 
   @override
   Widget build(BuildContext context) {
+    setAudio();
     return Scaffold(
       appBar: AppBar(
         title: Text(StringData.lyrics),
@@ -209,24 +210,24 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
               height: 20,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(formatTime(position)),
-                  Slider(
-                      min: 0,
-                      max: duration.inSeconds.toDouble(),
-                      value: position.inSeconds.toDouble(),
-                      onChanged: ((value) async {
-                        final position = Duration(seconds: value.toInt());
-                        await audiPlayer.seek(position);
-                        await audiPlayer.resume();
-                      })),
-                  Text(formatTime(duration - position)),
-                ],
-              ),
-            ),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(formatTime(position)),
+              Slider(
+                  min: 0,
+                  max: 100,
+                  value: duration.inSeconds==0?0:position.inSeconds.toDouble()*100/duration.inSeconds.toDouble(),
+                  onChanged: ((value) async {
+                    final position = Duration(seconds: value*duration.inSeconds.toDouble()~/100);
+                    await audiPlayer.seek(position);
+                    await audiPlayer.resume();
+                  })),
+              Text(formatTime(duration - position)),
+            ],
+          ),
+        ),
             const SizedBox(
               height: 20,
             ),
@@ -330,17 +331,19 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             IconButton(
-                onPressed: (() {
+                onPressed: (()async {
                   StringData.id = widget.cantique.id - 1;
+                  Cantique? value = await ref.read(CantiqueCrudController).getResultOfSearchById();
+                  if (value is Cantique) {
+                    setState(() {
+                      widget.cantique = value;
+                    });
+                  } else {
+                    showFlushBar(context, "Recherche",
+                        "Vous êtes sur la première cantique");
+                  }
                   ref.read(fetchCantiqueById).whenData((value) {
-                    if (value is Cantique) {
-                      setState(() {
-                        widget.cantique = value;
-                      });
-                    } else {
-                      showFlushBar(context, "Recherche",
-                          "Vous êtes sur la première cantique");
-                    }
+
                   });
                 }),
                 icon: Icon(
@@ -375,18 +378,17 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
               color: getWhite(context),
             ),
             IconButton(
-              onPressed: (() {
+              onPressed: (() async {
                 StringData.id = widget.cantique.id + 1;
-                ref.read(fetchCantiqueById).whenData((value) {
-                  if (value is Cantique) {
-                    setState(() {
-                      widget.cantique = value;
-                    });
-                  } else {
-                    showFlushBar(context, "Recherche",
-                        "Vous êtes sur la dernière cantique");
-                  }
-                });
+                Cantique? value = await ref.read(CantiqueCrudController).getResultOfSearchById();
+                if (value is Cantique) {
+                  setState(() {
+                    widget.cantique = value;
+                  });
+                } else {
+                  showFlushBar(context, "Recherche",
+                      "Vous êtes sur la dernière cantique");
+                }
               }),
               icon: Icon(
                 Icons.arrow_forward_ios,

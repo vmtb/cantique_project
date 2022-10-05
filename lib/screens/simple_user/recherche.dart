@@ -25,7 +25,7 @@ class _RechercheCantiqueState extends ConsumerState<RechercheCantique> {
     super.dispose();
   }
 
-  List<Cantique> liste = listeDemoCatique;
+  List<Cantique> liste = [];
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +55,7 @@ class _RechercheCantiqueState extends ConsumerState<RechercheCantique> {
             //   height: 60,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: TextFormField(
               controller: controller,
@@ -80,80 +81,14 @@ class _RechercheCantiqueState extends ConsumerState<RechercheCantique> {
           const SizedBox(
             height: 20,
           ),
-          ref.watch(fetchAllTest).when(
+          liste.isNotEmpty?ListOfResults(liste):ref.watch(fetchAllTest).when(
               data: (data) {
                 if (data.isEmpty) {
                   return const Center(
-                    child: Text("No data"),
+                    child: Text("Aucune donnée...."),
                   );
                 }
-                return ListView.separated(
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        navigateToNextPage(
-                            context,
-                            PlayMusics(
-                              cantique: data[index],
-                            ));
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: getSize(context).width * 0.04),
-                        height: 50,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          //color: Colors.green[100],
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: CircleAvatar(
-                                    backgroundColor: getBackCont(context),
-                                    radius: 15,
-                                    child: AppText(
-                                      (data[index].id).toString(),
-                                      color: getWhite(context),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ),
-                                AppText(
-                                  data[index].title,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.play_arrow,
-                                color: getBackCont(context),
-                                size: 25,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                  shrinkWrap: true,
-                  itemCount: data.length,
-                  separatorBuilder: (BuildContext context, int index) {
-                    return Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: getSize(context).width * 0.04),
-                      height: 0,
-                      color: Colors.grey,
-                    );
-                  },
-                );
+                return ListOfResults(data);
               },
               error: (err, stackErr) {
                 print(stackErr!);
@@ -166,15 +101,93 @@ class _RechercheCantiqueState extends ConsumerState<RechercheCantique> {
   }
 
   void searchCantique(String querry) {
-    final suggestions = liste.where((cantique) {
-      final input = querry.toLowerCase();
-      final cantiqueTitle = cantique.title.toLowerCase();
+    if(querry.trim().isEmpty){
+      setState(() {
+        liste = [];
+      });
+      return;
+    }
 
+    final suggestions = ref.read(fetchAllTest).value!.where((cantique) {
+      final input = querry.trim().toLowerCase();
+      final cantiqueTitle = cantique.title.toLowerCase();
+      log(cantiqueTitle);
       return cantiqueTitle.contains(input);
     }).toList();
 
     setState(() {
       liste = suggestions;
     });
+  }
+
+  Widget ListOfResults(List<Cantique> data) {
+    return ListView.separated(
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () {
+            navigateToNextPage(
+                context,
+                PlayMusics(
+                  cantique: data[index],
+                ));
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(
+                horizontal: getSize(context).width * 0.04),
+            height: 50,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(10),
+              //color: Colors.green[100],
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircleAvatar(
+                        backgroundColor: getBackCont(context),
+                        radius: 15,
+                        child: AppText(
+                          (data[index].id).toString(),
+                          color: getWhite(context),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                    AppText(
+                      data[index].title,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.play_arrow,
+                    color: getBackCont(context),
+                    size: 25,
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+      shrinkWrap: true,
+      itemCount: data.length,
+      separatorBuilder: (BuildContext context, int index) {
+        return Container(
+          margin: EdgeInsets.symmetric(
+              horizontal: getSize(context).width * 0.04, vertical: 1),
+          height: 0,
+          color: Colors.grey,
+        );
+      },
+    );
   }
 }

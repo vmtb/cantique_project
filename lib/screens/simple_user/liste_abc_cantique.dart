@@ -35,7 +35,7 @@ class _ListeAbcCantiqueState extends ConsumerState<ListeAbcCantique> {
           data: (data) {
             if (data.isEmpty) {
               return const Center(
-                child: Text("No data"),
+                child: Text("Aucune donnée trouvée..."),
               );
             }
             return Container(
@@ -43,19 +43,19 @@ class _ListeAbcCantiqueState extends ConsumerState<ListeAbcCantique> {
                   horizontal: getSize(context).width * 0.04,
                   vertical: getSize(context).height * 0.04),
               //height: 50,
-              decoration: const BoxDecoration(
+              decoration:   BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
                   //border: Border.all(color: Colors.grey),
                   //color: Colors.green[100],
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                         color: Colors.grey,
                         blurStyle: BlurStyle.outer,
-                        blurRadius: 0.5),
+                        blurRadius: 0.2),
                     BoxShadow(
                       color: Colors.grey,
                       blurStyle: BlurStyle.outer,
-                      blurRadius: 1.5,
-                      spreadRadius: 1,
+                      blurRadius: 1,
                     ),
                   ]),
               child: ListView.separated(
@@ -66,11 +66,9 @@ class _ListeAbcCantiqueState extends ConsumerState<ListeAbcCantique> {
                   return Visibility(
                     visible: values.isNotEmpty,
                     child: ExpansionTile(
-                      title: Container(
-                        child: AppText(
-                          newData.keys.first,
-                          weight: FontWeight.bold,
-                        ),
+                      title: AppText(
+                        newData.keys.first,
+                        weight: FontWeight.bold,
                       ),
                       children: [
                         ...List.generate(
