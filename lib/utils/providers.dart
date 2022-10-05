@@ -1,13 +1,34 @@
-
-
-import 'dart:io';
-
+import 'package:cantique/models/cantique.dart';
+import 'package:cantique/controllers/Cantique_crudControlller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-Provider<FirebaseAuth> mAuthRef = Provider((ref)=>FirebaseAuth.instance);
-Provider<CollectionReference> userRef = Provider((ref)=>FirebaseFirestore.instance.collection("Users"));
-Provider<Reference> thumbStorageRef = Provider((ref)=>FirebaseStorage.instance.ref().child("Audios"));
+Provider<FirebaseAuth> mAuthRef = Provider((ref) => FirebaseAuth.instance);
+Provider<CollectionReference> userRef =
+    Provider((ref) => FirebaseFirestore.instance.collection("Users"));
+Provider<Reference> thumbStorageRef =
+    Provider((ref) => FirebaseStorage.instance.ref().child("Audios").child(DateTime.now().toString()));
+
+final CantiqueDatasProvider =
+    Provider((ref) => FirebaseFirestore.instance.collection("Cantiques"));
+final CantiqueCrudController = Provider((ref) => CantiqueController(ref));
+
+final fetchAllTest = FutureProvider<List<Cantique>>(
+    (ref) => CantiqueController(ref).fetchAllTest1());
+
+final fetchFavoriteCantique = FutureProvider<List<Cantique>>(
+    (ref) => CantiqueController(ref).getFavoriteCantique());
+
+//DatabaseReference ref = FirebaseDatabase.instance.ref("users/$phoneNumber/phones/${StringData.myIme}");
+Provider<DatabaseReference> databaseRef =
+    Provider((ref) => FirebaseDatabase.instance.ref().child("CURRENT_ID"));
+
+final fetchCantiqueByCategorie =
+    FutureProvider<List<Map<String, List<Cantique>>>>(
+        (ref) => CantiqueController(ref).getAbcCantique());
+
+final fetchCantiqueById =
+    FutureProvider<Cantique?>((ref) => CantiqueController(ref).searchCantique());

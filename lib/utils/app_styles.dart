@@ -3,27 +3,28 @@ import 'package:flutter/material.dart';
 import 'app_const.dart';
 
 class AppStyles {
-
   static ThemeData themeData(bool isDarkTheme, BuildContext context) {
     return ThemeData(
-
       primarySwatch: isDarkTheme ? darkMainPrimaryColor : lightMainPrimaryColor,
 
       backgroundColor: isDarkTheme ? Colors.white : primaryColor_,
 
       primaryColor: isDarkTheme ? Colors.black : Colors.white,
 
-      textSelectionHandleColor: isDarkTheme ? Colors.white : Colors.black,
+      //textSelectionHandleColor: isDarkTheme ? Colors.white : Colors.black,
 
-      indicatorColor: isDarkTheme ? const Color(0xff0E1D36) : const Color(0xffCBDCF8),
+      indicatorColor:
+          isDarkTheme ? const Color(0xff0E1D36) : const Color(0xffCBDCF8),
 
-      //hintColor: isDarkTheme ? const Color(0xff280C0B) : const Color(0xffEECED3),
+      hintColor: isDarkTheme ? Colors.white : Colors.black,
 
       //highlightColor: isDarkTheme ? const Color(0xff372901) : Colors.white,
 
-      hoverColor: isDarkTheme ? const Color(0xff3A3A3B) : const Color(0xff4285F4),
+      hoverColor:
+          isDarkTheme ? const Color(0xff3A3A3B) : const Color(0xff4285F4),
 
-      focusColor: isDarkTheme ? const Color(0xff0B2512) : const Color(0xffA8DAB5),
+      focusColor:
+          isDarkTheme ? const Color(0xff0B2512) : const Color(0xffA8DAB5),
 
       disabledColor: Colors.grey,
 
@@ -34,7 +35,9 @@ class AppStyles {
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
 
       buttonTheme: Theme.of(context).buttonTheme.copyWith(
-          colorScheme: isDarkTheme ? const ColorScheme.dark() : const ColorScheme.light()),
+          colorScheme: isDarkTheme
+              ? const ColorScheme.dark()
+              : const ColorScheme.light()),
 
       splashColor: isDarkTheme ? Colors.white : primaryColor_,
 
@@ -42,14 +45,15 @@ class AppStyles {
         elevation: 0.0,
       ),
 
-      textSelectionTheme: TextSelectionThemeData(selectionColor: isDarkTheme ? Colors.white : Colors.black),
+      textSelectionTheme: TextSelectionThemeData(
+          selectionColor: isDarkTheme ? Colors.white : Colors.black),
     );
-
   }
-  static MaterialColor lightMainPrimaryColor =   const MaterialColor(
+
+  static MaterialColor lightMainPrimaryColor = const MaterialColor(
     0xff8c094f,
     <int, Color>{
-      50:  primaryColor_,
+      50: primaryColor_,
       100: primaryColor_,
       200: primaryColor_,
       300: primaryColor_,
@@ -76,25 +80,25 @@ class AppStyles {
       900: Colors.white,
     },
   );
-
 }
 
-Color getWhite(BuildContext context){
+
+Color getWhite(BuildContext context) {
   return Theme.of(context).primaryColor;
 }
 
 Color getBlack(BuildContext context){
-  return Theme.of(context).textSelectionHandleColor;
+  return Theme.of(context).hintColor;
 }
 
-Color getPrimaryColor(BuildContext context){
+Color getPrimaryColor(BuildContext context) {
   return Theme.of(context).splashColor;
 }
 
-Color getBackCont(BuildContext context){
+Color getBackCont(BuildContext context) {
   return Theme.of(context).backgroundColor;
 }
 
-Color getScaffCont(BuildContext context){
+Color getScaffCont(BuildContext context) {
   return Theme.of(context).scaffoldBackgroundColor;
 }

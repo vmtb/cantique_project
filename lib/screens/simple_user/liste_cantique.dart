@@ -1,6 +1,5 @@
 import 'package:cantique/components/app_text.dart';
 import 'package:cantique/models/cantique.dart';
-import 'package:cantique/screens/cantique/add_cantique.dart';
 import 'package:cantique/screens/simple_user/play_music.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
@@ -9,16 +8,14 @@ import 'package:cantique/utils/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CantiqueList extends ConsumerStatefulWidget {
-  const CantiqueList({
-    Key? key,
-  }) : super(key: key);
+class ListeCantique extends ConsumerStatefulWidget {
+  const ListeCantique({Key? key}) : super(key: key);
 
   @override
-  ConsumerState createState() => _CantiqueListState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ListeCantiqueState();
 }
 
-class _CantiqueListState extends ConsumerState<CantiqueList> {
+class _ListeCantiqueState extends ConsumerState<ListeCantique> {
   TextEditingController controller = TextEditingController();
 
   @override
@@ -168,15 +165,6 @@ class _CantiqueListState extends ConsumerState<CantiqueList> {
                     ))),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: getWhite(context),
-        ),
-        onPressed: () {
-          navigateToNextPage(context, const AddCantique());
-        },
       ),
     );
   }
