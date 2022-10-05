@@ -26,6 +26,7 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    String contenu=""; //venir du model
     content = contentToList("");
   }
 
@@ -97,16 +98,18 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                 height: 10,
               ),
               ListView.builder(itemBuilder: (context, e){
-                String part = content[e];
+                String part = content[e]; //Une section
                 String index = "";
                 String cant = "";
                 log(e.toString()+"**"+part);
+
                 if(part.isEmpty){
                   index="";
                 }else{
                   index = content[e].split(separator2)[0];
                   cant = content[e].split(separator2)[1];
                 }
+
                 return SizedBox(
                   width: getSize(context).width,
                   child: Column(
