@@ -36,7 +36,6 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
 
   @override
   void initState() {
-
     super.initState();
   }
 
@@ -52,18 +51,16 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
       });
     });
 
-   audiPlayer.onDurationChanged.listen((event) {
-     setState(() {
-       duration = event;
-     });
-   });
-    audiPlayer.onAudioPositionChanged.listen((event)   {
+    audiPlayer.onDurationChanged.listen((event) {
+      setState(() {
+        duration = event;
+      });
+    });
+    audiPlayer.onAudioPositionChanged.listen((event) {
       setState(() {
         position = event;
       });
     });
-
-
   }
 
   @override
@@ -210,24 +207,30 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
               height: 20,
             ),
             Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(formatTime(position)),
-              Slider(
-                  min: 0,
-                  max: 100,
-                  value: duration.inSeconds==0?0:position.inSeconds.toDouble()*100/duration.inSeconds.toDouble(),
-                  onChanged: ((value) async {
-                    final position = Duration(seconds: value*duration.inSeconds.toDouble()~/100);
-                    await audiPlayer.seek(position);
-                    await audiPlayer.resume();
-                  })),
-              Text(formatTime(duration - position)),
-            ],
-          ),
-        ),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(formatTime(position)),
+                  Slider(
+                      min: 0,
+                      max: 100,
+                      value: duration.inSeconds == 0
+                          ? 0
+                          : position.inSeconds.toDouble() *
+                              100 /
+                              duration.inSeconds.toDouble(),
+                      onChanged: ((value) async {
+                        final position = Duration(
+                            seconds:
+                                value * duration.inSeconds.toDouble() ~/ 100);
+                        await audiPlayer.seek(position);
+                        await audiPlayer.resume();
+                      })),
+                  Text(formatTime(duration - position)),
+                ],
+              ),
+            ),
             const SizedBox(
               height: 20,
             ),
@@ -331,9 +334,11 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             IconButton(
-                onPressed: (()async {
+                onPressed: (() async {
                   StringData.id = widget.cantique.id - 1;
-                  Cantique? value = await ref.read(CantiqueCrudController).getResultOfSearchById();
+                  Cantique? value = await ref
+                      .read(CantiqueCrudController)
+                      .getResultOfSearchById();
                   if (value is Cantique) {
                     setState(() {
                       widget.cantique = value;
@@ -342,9 +347,7 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
                     showFlushBar(context, "Recherche",
                         "Vous êtes sur la première cantique");
                   }
-                  ref.read(fetchCantiqueById).whenData((value) {
-
-                  });
+                  ref.read(fetchCantiqueById).whenData((value) {});
                 }),
                 icon: Icon(
                   Icons.arrow_back_ios,
@@ -362,9 +365,20 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
                   color: getWhite(context),
                 )),
             IconButton(
-                onPressed: (() {}),
+                onPressed: (() async {
+                  setState(() {
+                    widget.cantique.isFavourite = !widget.cantique.isFavourite;
+                  });
+
+                  StringData.myBool = widget.cantique.isFavourite;
+                  StringData.favoriteId = widget.cantique.id;
+                  ref.refresh(favoriseOrUnfavorise);
+                  //ref.read(favoriseOrUnfavorise).whenData((value) => null);
+                }),
                 icon: Icon(
-                  Icons.favorite,
+                  widget.cantique.isFavourite
+                      ? Icons.favorite
+                      : Icons.favorite_border,
                   color: getWhite(context),
                 )),
             IconButton(
@@ -380,7 +394,9 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
             IconButton(
               onPressed: (() async {
                 StringData.id = widget.cantique.id + 1;
-                Cantique? value = await ref.read(CantiqueCrudController).getResultOfSearchById();
+                Cantique? value = await ref
+                    .read(CantiqueCrudController)
+                    .getResultOfSearchById();
                 if (value is Cantique) {
                   setState(() {
                     widget.cantique = value;

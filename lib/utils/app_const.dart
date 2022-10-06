@@ -22,10 +22,9 @@ class StringData {
   static String rechercheCantique = "";
   static int id = 1;
   static int couplet = 0;
-
-//   static String var1 = "";
-//   static String var1 = "";
-//   static String var1 = "";
+  static bool myBool = false;
+  static int favoriteId = 1;
+  static String favoritesKey = "favorites";
 //   static String var1 = "";
 //   static String var1 = "";
 //   static String var1 = "";

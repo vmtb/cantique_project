@@ -128,21 +128,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                         print("go pressed");
                         if (controller.text != "" &&
                             int.tryParse(controller.text) != null) {
-
                           print("go pressed OKKK");
 
                           setState(() {
                             isLoading = true;
                           });
                           StringData.id = int.parse(controller.text);
-                          Cantique? c = await ref.read(CantiqueCrudController).getResultOfSearchById();
+                          Cantique? c = await ref
+                              .read(CantiqueCrudController)
+                              .getResultOfSearchById();
                           setState(() {
                             isLoading = false;
                           });
                           if (c != null) {
-                            navigateToNextPage( context, PlayMusics(cantique: c));
+                            navigateToNextPage(
+                                context, PlayMusics(cantique: c));
                           } else {
-                            showFlushBar(context, "Recherche", "Veuillez saisir un numero valide");
+                            showFlushBar(context, "Recherche",
+                                "Veuillez saisir un numero valide  !!!!");
                           }
                         } else {
                           log("go pressed Noooo");

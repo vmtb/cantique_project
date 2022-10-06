@@ -19,9 +19,12 @@ final CantiqueCrudController = Provider((ref) => CantiqueController(ref));
 final fetchAllTest = FutureProvider<List<Cantique>>((ref) => CantiqueController(ref).fetchAllTest1());
 
 final fetchFavoriteCantique = FutureProvider<List<Cantique>>((ref) => CantiqueController(ref).getFavoriteCantique());
-//DatabaseReference ref = FirebaseDatabase.instance.ref("users/$phoneNumber/phones/${StringData.myIme}");
+
 Provider<DatabaseReference> databaseRef = Provider((ref) => FirebaseDatabase.instance.ref().child("CURRENT_ID"));
 
 final fetchCantiqueByCategorie = FutureProvider<List<Map<String, List<Cantique>>>>((ref) => CantiqueController(ref).getAbcCantique());
 
 final fetchCantiqueById = FutureProvider<Cantique?>((ref) => CantiqueController(ref).searchCantique());
+
+
+final favoriseOrUnfavorise = FutureProvider<void>((ref) => CantiqueController(ref).likeOrUnlikeCantique());

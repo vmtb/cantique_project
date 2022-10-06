@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:cantique/models/cantique.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/providers.dart';
 
@@ -39,9 +41,19 @@ class CantiqueController {
 
   Future<List<Cantique>> fetchAllTest1() async {
     List<Cantique> models = [];
-    await ref.read(CantiqueDatasProvider).orderBy("id", descending: false).get().then((value) {
+    List<dynamic> favoriteListe = await getListeIdFavorite();
+    await ref
+        .read(CantiqueDatasProvider)
+        .orderBy("id", descending: false)
+        .get()
+        .then((value) {
       for (var element in value.docs) {
-        models.add(Cantique.fromMap(element.data()));
+        Cantique newC = Cantique.fromMap(element.data());
+        if (favoriteListe.contains(newC.id)) {
+          newC.isFavourite = true;
+        }
+
+        models.add(newC);
       }
     });
 
@@ -50,10 +62,11 @@ class CantiqueController {
 
   Future<List<Cantique>> getFavoriteCantique() async {
     List<Cantique> favoris = [];
+    List<dynamic> favoriteListe = await getListeIdFavorite();
     ref.watch(fetchAllTest).whenData(
       (value) {
         for (Cantique cantique in value) {
-          if (cantique.isFavourite) {
+          if (favoriteListe.contains(cantique.id)) {
             favoris.add(cantique);
           }
         }
@@ -127,22 +140,13 @@ class CantiqueController {
     return myId;
   }
 
-  // Future<Cantique?> searchCantique() async {
-  //   ref.watch(fetchAllTest).whenData((value) {
-  //     for (Cantique cantique in value) {
-  //       if (cantique.id == StringData.id) {
-  //         return cantique;
-  //       }
-  //     }
-  //   });
-  //   return null;
-  // }
   Future<Cantique?> searchCantique() async {
     log("Searching...");
     try {
-      List<Cantique>? value  = ref.read(fetchAllTest).value;
-      List<Cantique> filtered = value!.where((element) => element.id==StringData.id).toList();
-      if(filtered.isNotEmpty){
+      List<Cantique>? value = ref.read(fetchAllTest).value;
+      List<Cantique> filtered =
+          value!.where((element) => element.id == StringData.id).toList();
+      if (filtered.isNotEmpty) {
         return filtered[0];
       }
     } catch (e) {
@@ -152,7 +156,45 @@ class CantiqueController {
   }
 
   Future<Cantique?> getResultOfSearchById() async {
-    await ref.refresh(fetchCantiqueById);
+    ref.refresh(fetchCantiqueById);
     return ref.read(fetchCantiqueById).value;
+  }
+
+  Future<void> likeOrUnlikeCantique() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (!prefs.containsKey(StringData.favoritesKey)) {
+      String data = jsonEncode([]);
+      prefs.setString(StringData.favoritesKey, data);
+    }
+
+    if (StringData.myBool) {
+      final data = jsonDecode(prefs.getString(StringData.favoritesKey)!);
+      List<dynamic> liste = data as List<dynamic>;
+      liste.add(StringData.favoriteId);
+      prefs.setString(StringData.favoritesKey, jsonEncode(liste));
+    } else {
+      final data = jsonDecode(prefs.getString(StringData.favoritesKey)!);
+      List<dynamic> liste = data as List<dynamic>;
+      liste.removeWhere(((element) {
+        return element == StringData.favoriteId;
+      }));
+      prefs.setString(StringData.favoritesKey, jsonEncode(liste));
+    }
+
+    ref.refresh(fetchAllTest);
+  }
+
+  Future<List<dynamic>> getListeIdFavorite() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (!prefs.containsKey(StringData.favoritesKey)) {
+      String data = jsonEncode([]);
+      prefs.setString(StringData.favoritesKey, data);
+      return [];
+    } else {
+      final data = jsonDecode(prefs.getString(StringData.favoritesKey)!);
+      return data as List<dynamic>;
+    }
   }
 }
