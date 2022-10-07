@@ -143,6 +143,7 @@ class CantiqueController {
   Future<Cantique?> searchCantique() async {
     log("Searching...");
     try {
+      log("try Searching...");
       List<Cantique>? value = ref.read(fetchAllTest).value;
       List<Cantique> filtered =
           value!.where((element) => element.id == StringData.id).toList();
@@ -157,6 +158,7 @@ class CantiqueController {
 
   Future<Cantique?> getResultOfSearchById() async {
     ref.refresh(fetchCantiqueById);
+
     return ref.read(fetchCantiqueById).value;
   }
 

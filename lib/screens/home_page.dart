@@ -1,5 +1,4 @@
 import 'package:cantique/components/app_button.dart';
-import 'package:cantique/models/cantique.dart';
 import 'package:cantique/screens/simple_user/liste_abc_cantique.dart';
 import 'package:cantique/screens/simple_user/liste_cantique.dart';
 import 'package:cantique/screens/simple_user/liste_favorite.dart';
@@ -133,20 +132,26 @@ class _HomePageState extends ConsumerState<HomePage> {
                           setState(() {
                             isLoading = true;
                           });
+
                           StringData.id = int.parse(controller.text);
-                          Cantique? c = await ref
+                          
+                          await ref
                               .read(CantiqueCrudController)
-                              .getResultOfSearchById();
-                          setState(() {
-                            isLoading = false;
-                          });
-                          if (c != null) {
-                            navigateToNextPage(
-                                context, PlayMusics(cantique: c));
-                          } else {
-                            showFlushBar(context, "Recherche",
-                                "Veuillez saisir un numero valide  !!!!");
-                          }
+                              .getResultOfSearchById()
+                              .then(
+                            (value) {
+                              setState(() {
+                                isLoading = false;
+                              });
+                              if (value != null) {
+                                navigateToNextPage(
+                                    context, PlayMusics(cantique: value));
+                              } else {
+                                showFlushBar(context, "Recherche",
+                                    "Veuillez saisir un numero valide  !!!!");
+                              }
+                            },
+                          );
                         } else {
                           log("go pressed Noooo");
                           showFlushBar(context, "Recherche",
