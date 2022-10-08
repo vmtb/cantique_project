@@ -5,6 +5,7 @@ import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:cantique/utils/app_styles.dart';
 import 'package:cantique/utils/providers.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +19,8 @@ class PlayMusics extends ConsumerStatefulWidget {
 }
 
 class _PlayMusicsState extends ConsumerState<PlayMusics> {
+  //late Future<ListResult> futuresFiles;
+
   TextEditingController controller = TextEditingController();
   final audiPlayer = AudioPlayer();
   bool isPlaying = false;
@@ -36,6 +39,7 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
 
   @override
   void initState() {
+    //futuresFiles = ref.read(thumbStorageRefAll).listAll();
     super.initState();
   }
 
@@ -317,6 +321,23 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
                       size: 20,
                     ),
                   ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                GestureDetector(
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 20.0),
+                    child: AppText("Télécharger ? "),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.download),
                 ),
               ],
             ),

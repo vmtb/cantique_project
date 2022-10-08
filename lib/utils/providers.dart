@@ -12,6 +12,8 @@ Provider<CollectionReference> userRef = Provider((ref) => FirebaseFirestore.inst
 
 Provider<Reference> thumbStorageRef =  Provider((ref) => FirebaseStorage.instance.ref().child("Audios").child(DateTime.now().toString()));
 
+Provider<Reference> thumbStorageRefAll =  Provider((ref) => FirebaseStorage.instance.ref().child("Audios"));
+
 final CantiqueDatasProvider = Provider((ref) => FirebaseFirestore.instance.collection("Cantiques"));
 
 final CantiqueCrudController = Provider((ref) => CantiqueController(ref));
