@@ -160,7 +160,7 @@ class CantiqueController {
   }
 
   Future<Cantique?> getResultOfSearchById() async {
-    ref.refresh(fetchCantiqueById);
+    await ref.refresh(fetchCantiqueById);
 
     return ref.read(fetchCantiqueById).value;
   }

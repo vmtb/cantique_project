@@ -40,10 +40,9 @@ class _CantiqueListState extends ConsumerState<CantiqueList> {
           ),
           onPressed: (() => Navigator.pop(context)),
         ),
-        title: AppText(
+        title: Text(
           StringData.titleListe,
-          color: getWhite(context),
-          size: 18,
+          style: TextStyle(fontSize: 18),
         ),
       ),
       body: Column(

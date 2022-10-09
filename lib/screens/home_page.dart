@@ -1,4 +1,5 @@
 import 'package:cantique/components/app_button.dart';
+import 'package:cantique/controllers/settings_controller.dart';
 import 'package:cantique/screens/simple_user/liste_abc_cantique.dart';
 import 'package:cantique/screens/simple_user/liste_cantique.dart';
 import 'package:cantique/screens/simple_user/liste_favorite.dart';
@@ -43,10 +44,14 @@ class _HomePageState extends ConsumerState<HomePage> {
         title: Text(StringData.accueil),
         leading: const Icon(Icons.home),
         actions: [
-          IconButton(
-            onPressed: (() {}),
-            icon: const Icon(Icons.light_mode_rounded),
-          ),
+          ref.watch(darkFutureProvider).when(data: (data){
+            return IconButton(
+              onPressed: (() async{
+                ref.read(settingsController).saveDark(!data);
+              }),
+              icon: Icon(data?Icons.light_mode_rounded:Icons.dark_mode_rounded),
+            );
+          }, error: errorLoading, loading: loadingError),
           IconButton(
             onPressed: (() {
               navigateToNextPage(context, const LoginScreen());

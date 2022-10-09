@@ -1,3 +1,4 @@
+import 'package:cantique/controllers/settings_controller.dart';
 import 'package:cantique/models/cantique.dart';
 import 'package:cantique/controllers/Cantique_crudControlller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +18,8 @@ Provider<Reference> thumbStorageRefAll =  Provider((ref) => FirebaseStorage.inst
 final CantiqueDatasProvider = Provider((ref) => FirebaseFirestore.instance.collection("Cantiques"));
 
 final CantiqueCrudController = Provider((ref) => CantiqueController(ref));
+
+final settingsController = Provider((ref) => SettingsController(ref));
 
 final fetchAllTest = FutureProvider<List<Cantique>>((ref) => CantiqueController(ref).fetchAllTest1());
 

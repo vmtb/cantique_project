@@ -66,8 +66,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
 
               ElevatedButton(onPressed: (){
-                if (pseudoController.text=="admin"){
-                  if (pseudoController.text=="admin"){
+                if (pseudoController.text.trim()=="admin"){
+                  if (pseudoController.text.trim()=="admin"){
                     navigateToNextPage(context, const AdminHomePage() );
 
                   }

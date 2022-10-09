@@ -41,10 +41,10 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: AppText(
+        title:
+        const Text(
           "Nouveau cantique",
-          size: 18,
-          color: getWhite(context),
+          style: TextStyle(fontSize: 18),
         ),
       ),
       body: SingleChildScrollView(
@@ -182,6 +182,7 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               focusedBorder: OutlineInputBorder(
+
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),

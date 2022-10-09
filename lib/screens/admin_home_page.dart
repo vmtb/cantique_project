@@ -20,10 +20,9 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: AppText(
+        title: const Text(
           "Administration",
-          size: 18,
-          color: getWhite(context),
+          style: TextStyle(fontSize: 18),
         ),
       ),
       body: Column(
