@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cantique/components/app_button.dart';
 import 'package:cantique/components/app_text.dart';
 import 'package:cantique/models/cantique.dart';
@@ -5,11 +7,14 @@ import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:cantique/utils/app_styles.dart';
 import 'package:cantique/utils/providers.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class PlayMusics extends ConsumerStatefulWidget {
   PlayMusics({Key? key, required this.cantique}) : super(key: key);
@@ -37,8 +42,15 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
     super.dispose();
   }
 
+  String _localPath = "";
+  bool _permissionReady = false;
+  TargetPlatform? platform = TargetPlatform.android;
+
   @override
   void initState() {
+    if (Platform.isAndroid) {
+      platform = TargetPlatform.android;
+    }
     //futuresFiles = ref.read(thumbStorageRefAll).listAll();
     super.initState();
   }
@@ -334,6 +346,26 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
                     padding: EdgeInsets.only(left: 20.0),
                     child: AppText("Télécharger ? "),
                   ),
+                  onTap: () async {
+                    _permissionReady = await _checkPermission();
+                    if (_permissionReady) {
+                      await _prepareSaveDir();
+                      if (kDebugMode) {
+                        print("Downloading");
+                      }
+                      try {
+                        await Dio().download(widget.cantique.songUrl,
+                            _localPath + "/" + "audio${widget.cantique.id}");
+                        if (kDebugMode) {
+                          print("Download Completed.");
+                        }
+                      } catch (e) {
+                        if (kDebugMode) {
+                          print("Download Failed.\n\n" + e.toString());
+                        }
+                      }
+                    }
+                  },
                 ),
                 const Padding(
                   padding: EdgeInsets.all(8.0),
@@ -454,5 +486,39 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
     }
 
     return {"Refrain": c[1]};
+  }
+
+  Future<bool> _checkPermission() async {
+    if (platform == TargetPlatform.android) {
+      final status = await Permission.storage.status;
+      if (status != PermissionStatus.granted) {
+        final result = await Permission.storage.request();
+        if (result == PermissionStatus.granted) {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _prepareSaveDir() async {
+    _localPath = (await _findLocalPath())!;
+
+    //print(_localPath);
+    final savedDir = Directory(_localPath);
+    bool hasExisted = await savedDir.exists();
+    if (!hasExisted) {
+      savedDir.create();
+    }
+  }
+
+  Future<String?> _findLocalPath() async {
+    var directory = await getApplicationDocumentsDirectory();
+    print("###################${directory.path + Platform.pathSeparator + 'Download'}");
+    return directory.path + Platform.pathSeparator + 'Download';
   }
 }

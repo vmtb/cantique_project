@@ -12,6 +12,9 @@ import '../utils/providers.dart';
 class CantiqueController {
   final Ref ref;
   CantiqueController(this.ref);
+  late String _localPath;
+  late bool _permissionReady;
+
 
   Future<void> saveToCantique(String title, File? file, List content) async {
     //print("sds");
@@ -200,6 +203,23 @@ class CantiqueController {
     }
   }
 
-  
+  Future<void> downloadCantique() async {
+    final prefs = await SharedPreferences.getInstance();
 
+    if (!prefs.containsKey(StringData.localStorageCantique)) {
+      prefs.setString(StringData.localStorageCantique, jsonEncode([]));
+    }
+
+    final data = jsonDecode(prefs.getString(StringData.localStorageCantique)!);
+    List<Map<dynamic,dynamic>> liste = data as List<Map<dynamic,dynamic>>;
+    
+    //liste.add();
+    
+    prefs.setString(StringData.localStorageCantique, jsonEncode(liste));
+    
+
+    ref.refresh(fetchAllTest);
+  }
+
+    
 }
