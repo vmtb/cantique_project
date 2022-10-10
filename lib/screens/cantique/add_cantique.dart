@@ -336,7 +336,8 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
       print("filename  -------------> $fileName");
       if (fileName.contains('.')) {
         setState(() {
-          fileName = fileName.split('\'').first;
+          fileName = fileName.replaceAll(RegExp(r"'"), "");
+          log(fileName);
         });
         log(fileName);
         StringData.extension = fileName.split('.').last;

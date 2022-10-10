@@ -42,8 +42,11 @@ class CantiqueController {
 
   Future<List<Cantique>> fetchAllTest1() async {
     List<Cantique> models = [];
+    print("--------> liste favoris ");
     List<dynamic> favoriteListe = await getListeIdFavorite();
+    print("--------> liste download ");
     Map<dynamic, dynamic> downloadedListe = await listeDownloaded();
+    print(downloadedListe);
 
     await ref
         .read(CantiqueDatasProvider)
@@ -234,9 +237,10 @@ class CantiqueController {
   }
 
   Future<Map<dynamic, dynamic>> listeDownloaded() async {
+
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey(StringData.localStorageCantique)) {
-      String data = jsonEncode([]);
+      String data = jsonEncode({});
       prefs.setString(StringData.localStorageCantique, data);
       return {};
     } else {

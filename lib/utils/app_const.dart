@@ -25,7 +25,7 @@ class StringData {
   static bool myBool = false;
   static int favoriteId = 1;
   static String favoritesKey = "favorites";
-  static String localStorageCantique = "MesCantiquesSauvegardes";
+  static String localStorageCantique = "MesCantiquesSauvegarde";
   static Map<String, String> cantiqueDowloaded = {"0": "0"};
   static String extension = "mp3";
 //   static String var1 = "";
