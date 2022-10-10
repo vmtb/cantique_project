@@ -32,7 +32,6 @@ dependencies:
   audioplayers: ^0.20.1
   dio: ^4.0.0
   path_provider: ^2.0.2
-  permission_handler: ^10.1.0
 
 
 

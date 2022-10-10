@@ -4,6 +4,7 @@ import 'package:cantique/models/cantique.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,9 +13,6 @@ import '../utils/providers.dart';
 class CantiqueController {
   final Ref ref;
   CantiqueController(this.ref);
-  late String _localPath;
-  late bool _permissionReady;
-
 
   Future<void> saveToCantique(String title, File? file, List content) async {
     //print("sds");
@@ -160,7 +158,7 @@ class CantiqueController {
   }
 
   Future<Cantique?> getResultOfSearchById() async {
-    await ref.refresh(fetchCantiqueById);
+    ref.refresh(fetchCantiqueById);
 
     return ref.read(fetchCantiqueById).value;
   }
@@ -207,19 +205,23 @@ class CantiqueController {
     final prefs = await SharedPreferences.getInstance();
 
     if (!prefs.containsKey(StringData.localStorageCantique)) {
-      prefs.setString(StringData.localStorageCantique, jsonEncode([]));
+      List<Map<String, String>> format = [
+        {"0": "000"}
+      ];
+      String data1 = jsonEncode(format);
+      prefs.setString(StringData.localStorageCantique, data1);
     }
 
     final data = jsonDecode(prefs.getString(StringData.localStorageCantique)!);
-    List<Map<dynamic,dynamic>> liste = data as List<Map<dynamic,dynamic>>;
-    
-    //liste.add();
-    
+    print("Après decode ");
+    print(data);
+    List<dynamic> liste = data as List<dynamic>;
+
+    liste.add(StringData.cantiqueDowloaded);
+    if (kDebugMode) {
+      print("Liste des chansons locals :");
+      print(liste);
+    }
     prefs.setString(StringData.localStorageCantique, jsonEncode(liste));
-    
-
-    ref.refresh(fetchAllTest);
   }
-
-    
 }

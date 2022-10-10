@@ -41,8 +41,7 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-        const Text(
+        title: const Text(
           "Nouveau cantique",
           style: TextStyle(fontSize: 18),
         ),
@@ -182,7 +181,6 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               focusedBorder: OutlineInputBorder(
-
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
@@ -287,8 +285,9 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
               ),
               ElevatedButton(
                   onPressed: () async {
-                    if(titleController.text.trim().isEmpty){
-                      showFlushBar(context, "Information", "Le titre est requis...");
+                    if (titleController.text.trim().isEmpty) {
+                      showFlushBar(
+                          context, "Information", "Le titre est requis...");
                       return;
                     }
                     if (filePicked == null) {
@@ -332,10 +331,24 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
   Future<void> pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
-      setState(() {
-        filePicked = File(result.paths.first!);
-        fileName = filePicked.toString().split('/').last.split('\'').first;
-      });
+      filePicked = File(result.paths.first!);
+      fileName = filePicked.toString().split('/').last;
+      print("filename  -------------> $fileName");
+      if (fileName.contains('.')) {
+        setState(() {
+          fileName = fileName.split('\'').first;
+        });
+        log(fileName);
+        StringData.extension = fileName.split('.').last;
+        log(StringData.extension);
+      } else {
+        filePicked = null;
+        setState(() {
+          fileName = "Erreur de fichier !";
+        });
+        showFlushBar(context, "Choix de son",
+            "Veuillez choisir un son ayant d'extension !!!!\n\n (Ex: .mp3 , .avi , etc ) ");
+      }
     }
   }
 }

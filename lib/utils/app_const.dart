@@ -1,4 +1,3 @@
-import 'package:cantique/models/cantique.dart';
 import 'package:flutter/material.dart';
 
 const primaryColor_ = Color(0xff8c094f);
@@ -26,9 +25,9 @@ class StringData {
   static bool myBool = false;
   static int favoriteId = 1;
   static String favoritesKey = "favorites";
-  static String localStorageCantique = "StorageCantique";
-  static Cantique cantiqueToDownload = Cantique(isFavourite: false, id: -1, title: "", songUrl: "", contenu: [], time: DateTime.now().toString());
-//   static String var1 = "";
+  static String localStorageCantique = "MesCantiquess";
+  static Map<String, String> cantiqueDowloaded = {"0": "000111"};
+  static String extension = "mp3";
 //   static String var1 = "";
 //   static String var1 = "";
 //   static String var1 = "";

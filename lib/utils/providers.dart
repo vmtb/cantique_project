@@ -1,6 +1,7 @@
 import 'package:cantique/controllers/settings_controller.dart';
 import 'package:cantique/models/cantique.dart';
 import 'package:cantique/controllers/Cantique_crudControlller.dart';
+import 'package:cantique/utils/app_const.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -11,7 +12,7 @@ Provider<FirebaseAuth> mAuthRef = Provider((ref) => FirebaseAuth.instance);
 
 Provider<CollectionReference> userRef = Provider((ref) => FirebaseFirestore.instance.collection("Users"));
 
-Provider<Reference> thumbStorageRef =  Provider((ref) => FirebaseStorage.instance.ref().child("Audios").child(DateTime.now().toString()));
+Provider<Reference> thumbStorageRef =  Provider((ref) => FirebaseStorage.instance.ref().child("Audios").child(DateTime.now().microsecondsSinceEpoch.toString()+"__"+StringData.extension+"__"));
 
 Provider<Reference> thumbStorageRefAll =  Provider((ref) => FirebaseStorage.instance.ref().child("Audios"));
 
@@ -30,6 +31,5 @@ Provider<DatabaseReference> databaseRef = Provider((ref) => FirebaseDatabase.ins
 final fetchCantiqueByCategorie = FutureProvider<List<Map<String, List<Cantique>>>>((ref) => CantiqueController(ref).getAbcCantique());
 
 final fetchCantiqueById = FutureProvider<Cantique?>((ref) => CantiqueController(ref).searchCantique());
-
 
 final favoriseOrUnfavorise = FutureProvider<void>((ref) => CantiqueController(ref).likeOrUnlikeCantique());
