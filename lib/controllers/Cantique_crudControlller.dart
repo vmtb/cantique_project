@@ -16,9 +16,10 @@ class CantiqueController {
 
   Future<void> saveToCantique(String title, File? file, List content) async {
     //print("sds");
-
+    log("adding....");
     await addFileToStorage(file!).then((value) async {
       String url = value;
+      log("save at $url....");
       await getCurrentId().then((value) async {
         Cantique cantique = Cantique(
             id: value,
@@ -166,7 +167,7 @@ class CantiqueController {
   }
 
   Future<Cantique?> getResultOfSearchById() async {
-    ref.refresh(fetchCantiqueById);
+    await ref.refresh(fetchCantiqueById);
 
     return ref.read(fetchCantiqueById).value;
   }

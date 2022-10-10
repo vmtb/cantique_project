@@ -301,15 +301,14 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                       await ref
                           .read(CantiqueCrudController)
                           .saveToCantique(
-                              titleController.text, filePicked, content)
-                          .then((value) {
-                        ref.refresh(fetchAllTest);
-                        setState(() {
-                          isLoading = false;
-                        });
-                        showFlushBar(context, "Message succes", "Ajout réussi");
-                        navigateToNextPage(context, const CantiqueList());
+                              titleController.text, filePicked, content);
+
+                      ref.refresh(fetchAllTest);
+                      setState(() {
+                        isLoading = false;
                       });
+                      showFlushBar(context, "Message succes", "Ajout réussi");
+                      navigateToNextPage(context, const CantiqueList());
                     }
                   },
                   child: isLoading
