@@ -501,8 +501,7 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
     log("start-------------->");
     final appStorage = await getApplicationDocumentsDirectory();
 
-    print(
-        '${appStorage.path}/localMusiques${widget.cantique.id}.${widget.cantique.songUrl.split("__")[1]}');
+    log('${appStorage.path}/localMusiques${widget.cantique.id}.${widget.cantique.songUrl.split("__")[1]}');
 
     final file = File(
         '${appStorage.path}/localMusiques${widget.cantique.id}.${widget.cantique.songUrl.split("__")[1]}');
