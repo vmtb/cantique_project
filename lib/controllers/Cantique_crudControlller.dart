@@ -167,6 +167,7 @@ class CantiqueController {
   }
 
   Future<Cantique?> getResultOfSearchById() async {
+    // ignore: await_only_futures
     await ref.refresh(fetchCantiqueById);
 
     return ref.read(fetchCantiqueById).value;
