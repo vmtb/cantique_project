@@ -50,7 +50,8 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
 
   Future setAudio() async {
     String url = widget.cantique.songUrl;
-    await audiPlayer.setUrl(url, isLocal: false);
+    await audiPlayer.setUrl(url,
+        isLocal: !widget.cantique.songUrl.contains("http"));
 
     audiPlayer.onPlayerStateChanged.listen((event) {
       setState(() {
@@ -72,6 +73,7 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLocal = !widget.cantique.songUrl.contains("http");
     setAudio();
     return Scaffold(
       appBar: AppBar(
@@ -317,7 +319,6 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(7),
                     ),
-                    //child: IconButton(
                     child: Icon(
                       Icons.square,
                       color: getWhite(context),
@@ -330,38 +331,57 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
             const SizedBox(
               height: 10,
             ),
-            GestureDetector(
-              onTap: () async {
-                setState(() {
-                  isDownloading = true;
-                });
-                await download().then((value) {
-                  if (value != null) {
-                    StringData.cantiqueDowloaded = {
-                      widget.cantique.id.toString(): value.path
-                    };
-                    ref.read(CantiqueCrudController).downloadCantique();
-                    setState(() {
-                      isDownloading = false;
-                    });
-                  }
-                });
-              },
-              child: Row(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 20.0),
-                    child: AppText("Télécharger ? "),
+            isLocal
+                ? Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.only(left: 20.0),
+                        child: AppText("Téléchargé "),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
+                  )
+                : GestureDetector(
+                    onTap: () async {
+                      setState(() {
+                        isDownloading = true;
+                      });
+                      await download().then((value) {
+                        if (value != null) {
+                          StringData.cantiqueDowloaded = {
+                            widget.cantique.id.toString(): value.path
+                          };
+                          ref.read(CantiqueCrudController).downloadCantique();
+                          ref.refresh(fetchAllTest);
+
+                          setState(() {
+                            isDownloading = false;
+                            isLocal = true;
+                          });
+                        }
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(left: 20.0),
+                          child: AppText("Télécharger ? "),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: isDownloading
+                              ? const CircularProgressIndicator()
+                              : const Icon(Icons.download),
+                        ),
+                      ],
+                    ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: isDownloading
-                        ? const CircularProgressIndicator()
-                        : const Icon(Icons.download),
-                  ),
-                ],
-              ),
-            ),
             const SizedBox(
               height: 20,
             ),

@@ -43,6 +43,8 @@ class CantiqueController {
   Future<List<Cantique>> fetchAllTest1() async {
     List<Cantique> models = [];
     List<dynamic> favoriteListe = await getListeIdFavorite();
+    Map<dynamic, dynamic> downloadedListe = await listeDownloaded();
+
     await ref
         .read(CantiqueDatasProvider)
         .orderBy("id", descending: false)
@@ -52,6 +54,9 @@ class CantiqueController {
         Cantique newC = Cantique.fromMap(element.data());
         if (favoriteListe.contains(newC.id)) {
           newC.isFavourite = true;
+        }
+        if (downloadedListe.containsKey(newC.id.toString())) {
+          newC.songUrl = downloadedListe[newC.id.toString()];
         }
 
         models.add(newC);
@@ -205,23 +210,39 @@ class CantiqueController {
     final prefs = await SharedPreferences.getInstance();
 
     if (!prefs.containsKey(StringData.localStorageCantique)) {
-      List<Map<String, String>> format = [
-        {"0": "000"}
-      ];
+      Map<String, String> format = {"0": "000"};
+
       String data1 = jsonEncode(format);
       prefs.setString(StringData.localStorageCantique, data1);
     }
 
     final data = jsonDecode(prefs.getString(StringData.localStorageCantique)!);
-    print("Après decode ");
-    print(data);
-    List<dynamic> liste = data as List<dynamic>;
 
-    liste.add(StringData.cantiqueDowloaded);
+    if (kDebugMode) {
+      print("Après decode ");
+      print(data);
+    }
+
+    Map<dynamic, dynamic> liste = data as Map<dynamic, dynamic>;
+
+    liste.addEntries(StringData.cantiqueDowloaded.entries);
     if (kDebugMode) {
       print("Liste des chansons locals :");
       print(liste);
     }
     prefs.setString(StringData.localStorageCantique, jsonEncode(liste));
+  }
+
+  Future<Map<dynamic, dynamic>> listeDownloaded() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey(StringData.localStorageCantique)) {
+      String data = jsonEncode([]);
+      prefs.setString(StringData.localStorageCantique, data);
+      return {};
+    } else {
+      final data =
+          jsonDecode(prefs.getString(StringData.localStorageCantique)!);
+      return data as Map<dynamic, dynamic>;
+    }
   }
 }
