@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cantique/components/app_button.dart';
 import 'package:cantique/components/app_text.dart';
+import 'package:cantique/controllers/settings_controller.dart';
 import 'package:cantique/models/cantique.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
@@ -86,10 +87,14 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
           onPressed: (() => Navigator.pop(context)),
         ),
         actions: [
-          IconButton(
-            onPressed: (() {}),
-            icon: const Icon(Icons.light_mode_rounded),
-          ),
+          ref.watch(darkFutureProvider).when(data: (data){
+            return IconButton(
+              onPressed: (() async{
+                ref.read(settingsController).saveDark(!data);
+              }),
+              icon: Icon(data?Icons.light_mode_rounded:Icons.dark_mode_rounded),
+            );
+          }, error: errorLoading, loading: loadingError),
           IconButton(
             onPressed: (() {}),
             icon: const Icon(Icons.share),
@@ -352,18 +357,19 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
                       setState(() {
                         isDownloading = true;
                       });
-                      await download().then((value) {
+                      await download().then((value) async {
                         if (value != null) {
                           StringData.cantiqueDowloaded = {
                             widget.cantique.id.toString(): value.path
                           };
-                          ref.read(CantiqueCrudController).downloadCantique();
+                          await ref.read(CantiqueCrudController).downloadCantique();
                           ref.refresh(fetchAllTest);
 
                           setState(() {
-                            isDownloading = false;
                             isLocal = true;
+                            isDownloading = false;
                           });
+                          
                         }
                       });
                     },
