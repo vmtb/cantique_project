@@ -136,14 +136,20 @@ class CantiqueController {
     return favoris;
   }
 
-  Future<void> delete(String id) async{
+  Future<void> delete(int id) async{
 
-    print(id);
-
-    await ref
+    final a=await ref
         .read(CantiqueDatasProvider)
-        .doc(id)
-        .delete();
+        .where('id',isEqualTo: id)
+        .get().then((value) => value);
+
+    if (a==null){
+
+    }
+    else{
+      await ref.read(CantiqueDatasProvider)
+          .doc(a.docs[0].id).delete();
+    }
 
 
   }

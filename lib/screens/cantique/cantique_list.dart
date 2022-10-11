@@ -148,10 +148,13 @@ class _CantiqueListState extends ConsumerState<CantiqueList> {
                                       size: 25,
                                     ),
                                     IconButton(onPressed: () async{
-                                      await ref
-                                          .read(CantiqueCrudController).delete(liste[index].id.toString());
 
-                                      print('Suppr');
+                                        await ref
+                                            .read(CantiqueCrudController).delete(liste[index].id);
+
+
+                                                ref.refresh(fetchAllTest);
+
                                     }, icon: Icon(Icons.delete,color: Colors.red,))
                                   ],
                                 )
