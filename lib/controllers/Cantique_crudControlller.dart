@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cantique/models/cantique.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -133,6 +134,18 @@ class CantiqueController {
     );
 
     return favoris;
+  }
+
+  Future<void> delete(String id) async{
+
+    print(id);
+
+    await ref
+        .read(CantiqueDatasProvider)
+        .doc(id)
+        .delete();
+
+
   }
 
   Future<int> getCurrentId() async {

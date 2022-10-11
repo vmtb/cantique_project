@@ -137,12 +137,25 @@ class _CantiqueListState extends ConsumerState<CantiqueList> {
                                 ],
                               ),
                               Padding(
+
+
                                 padding: const EdgeInsets.all(8.0),
-                                child: Icon(
-                                  Icons.play_arrow,
-                                  color: getBackCont(context),
-                                  size: 25,
-                                ),
+                                child:Row(
+                                  children: [
+                                    Icon(
+                                      Icons.play_arrow,
+                                      color: getBackCont(context),
+                                      size: 25,
+                                    ),
+                                    IconButton(onPressed: () async{
+                                      await ref
+                                          .read(CantiqueCrudController).delete(liste[index].id.toString());
+
+                                      print('Suppr');
+                                    }, icon: Icon(Icons.delete,color: Colors.red,))
+                                  ],
+                                )
+
                               )
                             ],
                           ),
