@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-const primaryColor_ = Color(0xff8c094f);
-const accentColor_ = Color(0xffb5045f);
+const primaryColor_ = Color(0xff2869B3);
+const accentColor_ = Color.fromARGB(255, 3, 3, 154);
 const secondaryColor_ = Color(0xff368fc7);
 
 const separator1 = " \t\r\r\t ";

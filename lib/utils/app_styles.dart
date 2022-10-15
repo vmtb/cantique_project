@@ -51,7 +51,7 @@ class AppStyles {
   }
 
   static MaterialColor lightMainPrimaryColor = const MaterialColor(
-    0xff8c094f,
+    0xff2869B3,
     <int, Color>{
       50: primaryColor_,
       100: primaryColor_,
@@ -82,12 +82,11 @@ class AppStyles {
   );
 }
 
-
 Color getWhite(BuildContext context) {
   return Theme.of(context).primaryColor;
 }
 
-Color getBlack(BuildContext context){
+Color getBlack(BuildContext context) {
   return Theme.of(context).hintColor;
 }
 
