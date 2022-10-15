@@ -2,7 +2,7 @@
     package="com.pirc.cantique">
    <application
 
-        android:label="cantique"
+        android:label="Cantique JJC"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

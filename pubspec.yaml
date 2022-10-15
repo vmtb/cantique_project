@@ -46,20 +46,18 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/logo1.png"
+  image_path: "assets/logoN.png"
   min_sdk_android: 21
 
 
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/logo1.png
+  image: assets/logoN.png
   android: true
   ios: true
 # The following section is specific to Flutter.
 flutter:
 
   uses-material-design: true
-
-
   assets:
     - assets/

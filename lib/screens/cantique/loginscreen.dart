@@ -36,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SafeArea(child: Center(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -56,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextFormField(
 
                   controller: passController,
+                  obscureText: true,
                 decoration: InputDecoration(
                   hintText: "Password",
                   hintStyle: TextStyle(
@@ -67,13 +68,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
               ElevatedButton(onPressed: (){
                 if (pseudoController.text.trim()=="admin"){
-                  if (pseudoController.text.trim()=="admin"){
+                  if (passController.text.trim()=="pirc-cantiquejjc"){
                     navigateToNextPage(context, const AdminHomePage() );
 
                   }
                 }
 
-              }, child: Text("Se connecter en tant admin"))
+              }, child: const Text("Se connecter en tant admin"))
             ],
           ) ,
         ),
