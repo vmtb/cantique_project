@@ -1,3 +1,5 @@
+import 'package:cantique/components/app_text.dart';
+import 'package:cantique/utils/app_pref.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/app_func.dart';
@@ -15,13 +17,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late TextEditingController pseudoController;
   late  TextEditingController passController;
-
+  bool rem= false;
 
   @override
   void initState(){
     super.initState();
     pseudoController=TextEditingController();
     passController=TextEditingController();
+    remember();
   }
 
   @override
@@ -65,10 +68,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   focusColor: getPrimaryColor(context),
                 ),
               ),
+              CheckboxListTile(value: rem, onChanged: (e){
+                setState(() {
+                  rem = e!;
+                });
+              }, title: const AppText("Se souvenir de moi"),),
 
               ElevatedButton(onPressed: (){
+                //navigateToNextPage(context, const AdminHomePage() );
                 if (pseudoController.text.trim()=="admin"){
                   if (passController.text.trim()=="pirc-cantiquejjc"){
+                    if(rem){
+                      savePreference("login", "admin");
+                      savePreference("pass", "pirc-cantiquejjc");
+                    }else{
+                      savePreference("login", "");
+                      savePreference("pass", "");
+                    }
                     navigateToNextPage(context, const AdminHomePage() );
 
                   }
@@ -81,6 +97,17 @@ class _LoginScreenState extends State<LoginScreen> {
       )
       ),
     );
+  }
+
+  void remember()async {
+    if(await getPreference("login")!=""){
+      pseudoController.text = (await getPreference("login"))!;
+      passController.text = (await getPreference("pass"))!;
+      rem = true;
+      setState(() {
+
+      });
+    }
   }
 }
 

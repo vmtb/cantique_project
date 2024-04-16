@@ -20,6 +20,7 @@ class ListeAbcCantique extends ConsumerStatefulWidget {
 class _ListeAbcCantiqueState extends ConsumerState<ListeAbcCantique> {
   @override
   Widget build(BuildContext context) {
+    //ref.refresh(fetchCantiqueByCategorie);
     return Scaffold(
       appBar: AppBar(
         title: Text(StringData.tableAlpha),
@@ -89,10 +90,6 @@ class _ListeAbcCantiqueState extends ConsumerState<ListeAbcCantique> {
                                 decoration: const BoxDecoration(
                                     //border: Border.all(color: Colors.grey),
                                     boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.grey,
-                                          blurStyle: BlurStyle.outer,
-                                          blurRadius: 0.5)
                                     ]
                                     //color: Colors.green[100],
                                     ),
@@ -145,12 +142,7 @@ class _ListeAbcCantiqueState extends ConsumerState<ListeAbcCantique> {
                 shrinkWrap: true,
                 itemCount: data.length,
                 separatorBuilder: (BuildContext context, int index) {
-                  return Container(
-                    // margin: EdgeInsets.symmetric(
-                    //     horizontal: getSize(context).width * 0.04),
-                    height: 0.3,
-                    color: Colors.grey,
-                  );
+                  return const Divider();
                 },
               ),
             );

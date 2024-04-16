@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../components/app_text.dart';
+import '../../models/cantique.dart';
 import '../../utils/app_const.dart';
 import '../../utils/app_styles.dart';
 import '../../utils/providers.dart';
@@ -15,7 +16,8 @@ import 'cantique_list.dart';
 import 'package:file_picker/file_picker.dart';
 
 class AddCantique extends ConsumerStatefulWidget {
-  const AddCantique({
+  final Cantique cantique;
+  const AddCantique(this.cantique, {
     Key? key,
   }) : super(key: key);
 
@@ -25,15 +27,25 @@ class AddCantique extends ConsumerStatefulWidget {
 
 class _AddCantiqueState extends ConsumerState<AddCantique> {
   final titleController = TextEditingController();
+  final idController = TextEditingController();
+  final melodieController = TextEditingController();
   late List<String> content = [];
   File? filePicked;
   bool isLoading = false;
   String fileName = "Cliquez pour changer la musique";
   int couplet = 1;
+  late Cantique cantique;
 
   @override
   void initState() {
-    content = contentToList("");
+    cantique= widget.cantique;
+    content = cantique.contenu as List<String>; //contentToList("");
+    titleController.text=cantique.title;
+    melodieController.text=cantique.melodie;
+    if(cantique.id>0){
+      idController.text  = cantique.id.toString();
+    }
+
     super.initState();
   }
 
@@ -64,12 +76,12 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                     // }
                     pickFile();
                   },
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(10),
                   child: Container(
                     width: getSize(context).width,
                     height: 110,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: getBlack(context)),
                     ),
                     child: Center(
@@ -95,6 +107,21 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                   controller: titleController,
                   label: "Titre du cantique",
                   validationBuilder: ValidationBuilder()),
+              const SizedBox(
+                height: 10,
+              ),
+              AppInput(
+                  controller: idController,
+                  inputType: TextInputType.number,
+                  label: "Numéro du cantique",
+                  validationBuilder: ValidationBuilder()),
+              const SizedBox(
+                height: 10,
+              ),
+              AppInput(
+                  controller: melodieController,
+                  label: "Mélodie",
+                  validationBuilder: ValidationBuilder()),
               // const SizedBox(
               //   height: 10,
               // ),
@@ -116,11 +143,10 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
               ListView.builder(
                 itemBuilder: (context, e) {
                   String part = content[e];
-                  String index = "";
-                  String cant = "";
+                  var index ;
+                  var cant = "";
                   log(e.toString() + "**" + part);
                   if (part.isEmpty) {
-                    index = "";
                   } else {
                     index = content[e].split(separator2)[0];
                     cant = content[e].split(separator2)[1];
@@ -132,18 +158,16 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: DropdownButtonFormField(
-                              value: index == ""
-                                  ? null
-                                  : (index == "0" ? (e + 1).toString() : index),
+                            value: index,
                               decoration: InputDecoration(
                                 labelText: "Numéro d'ordre",
                                 /*floatingLabelBehavior: FloatingLabelBehavior.never,*/
                                 suffixIcon: const Icon(Icons.numbers),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
                               items: [
@@ -158,7 +182,7 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                               ],
                               onChanged: (e_) {
                                 index =
-                                    e_ == "Refrain" ? "Refrain" : "$couplet";
+                                    e_ == "Refrain" ? "Refrain" : "${e+1}";
                                 if (e_ != "Refrain") {
                                   couplet++;
                                 }
@@ -178,10 +202,10 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                               /*floatingLabelBehavior: FloatingLabelBehavior.never,*/
                               suffixIcon: const Icon(Icons.music_note_rounded),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                             keyboardType: TextInputType.multiline,
@@ -290,32 +314,53 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
                           context, "Information", "Le titre est requis...");
                       return;
                     }
-                    if (filePicked == null) {
-                      showFlushBar(context, "Choix de fichier audio",
-                          "Veuillez sélectionner un fichier audio");
-                    } else {
+                    int? idC = int.tryParse(idController.text.trim());
+                    if (idC==null || idC<=0) {
+                      showFlushBar(
+                          context, "Information", "L'id doit être un entier positif...");
+                      return;
+                    }
+                    setState(() {
+                      isLoading = true;
+                    });
+
+                    if(cantique.id!=idC){
+                      List<Cantique>? value = ref.read(fetchAllTest).value;
+                      List<Cantique> filtered = value!.where((element) => element.id == idC).toList();
+                      if (filtered.isNotEmpty) {
+                        showFlushBar(
+                            context, "Attention", "Ce numéro de cantique existe déjà...");
+                        setState(() {
+                          isLoading = false;
+                        });
+                        return;
+                      }
+                    }
+
+                    if (true/*cantique.songUrl.isEmpty && filePicked == null*/) {
+                    //   showFlushBar(context, "Choix de fichier audio",
+                    //       "Veuillez sélectionner un fichier audio");
+                    // } else {
                       setState(() {
                         isLoading = true;
                       });
 
-                      await ref
-                          .read(CantiqueCrudController)
-                          .saveToCantique(
-                              titleController.text, filePicked, content);
+                      cantique=cantique.copyWith(melodie: melodieController.text);
+
+                      await ref.read(CantiqueCrudController).saveToCantique( cantique, idC,titleController.text, filePicked, content);
 
                       ref.refresh(fetchAllTest);
                       setState(() {
                         isLoading = false;
                       });
-                      showFlushBar(context, "Message succes", "Ajout réussi");
-                      navigateToNextPage(context, const CantiqueList());
+                      Navigator.pop(context);
                     }
                   },
                   child: isLoading
                       ? CupertinoActivityIndicator(
                           color: getWhite(context),
                         )
-                      : const Text("Ajouter Cantique"))
+                      : Text( cantique.id<=0?"Ajouter Cantique":"Modifier Cantique"))
             ],
           ),
         ),

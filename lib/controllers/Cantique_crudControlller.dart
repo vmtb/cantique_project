@@ -15,24 +15,39 @@ class CantiqueController {
   final Ref ref;
   CantiqueController(this.ref);
 
-  Future<void> saveToCantique(String title, File? file, List content) async {
+  Future<void> saveToCantique(Cantique c, int id, String title, File? file, List<String> content) async {
     //print("sds");
     log("adding....");
-    await addFileToStorage(file!).then((value) async {
+    if(file==null){
+      Cantique cantique = c.copyWith(
+          id: id,
+          isFavourite: false,
+          title: title,
+          contenu: content,
+          time: DateTime.now().toString());
+      await saveOrUpdate(cantique);
+    }else {
+      await addFileToStorage(file).then((value) async {
       String url = value;
       log("save at $url....");
-      await getCurrentId().then((value) async {
-        Cantique cantique = Cantique(
-            id: value,
-            isFavourite: false,
-            title: title,
-            contenu: content,
-            songUrl: url,
-            time: DateTime.now().toString());
-
-        await ref.read(CantiqueDatasProvider).add(cantique.toMap());
+      Cantique cantique = c.copyWith(
+          id: id,
+          isFavourite: false,
+          title: title,
+          contenu: content,
+          songUrl: url,
+          time: DateTime.now().toString());
+      await saveOrUpdate(cantique);
       });
-    });
+    }
+
+  }
+  Future saveOrUpdate(Cantique c) async {
+    if(c.key.isEmpty) {
+      await ref.read(CantiqueDatasProvider).add(c.toMap());
+    }else{
+      await ref.read(CantiqueDatasProvider).doc(c.key).set(c.toMap());
+    }
   }
 
   Future<String> addFileToStorage(File file) async {
@@ -56,6 +71,7 @@ class CantiqueController {
         .get()
         .then((value) {
       for (var element in value.docs) {
+        log(element.data());
         Cantique newC = Cantique.fromMap(element.data());
         if (favoriteListe.contains(newC.id)) {
           newC.isFavourite = true;
@@ -63,6 +79,7 @@ class CantiqueController {
         if (downloadedListe.containsKey(newC.id.toString())) {
           newC.songUrl = downloadedListe[newC.id.toString()];
         }
+        newC=newC.copyWith(key: element.id);
 
         models.add(newC);
       }
@@ -121,12 +138,15 @@ class CantiqueController {
     ref.watch(fetchAllTest).whenData(
       (value) {
         for (String str in liste) {
-          favoris.add({str: []});
 
+          List<Cantique>cc=[];
           for (Cantique cantique in value) {
             if (cantique.title.toUpperCase().startsWith(str)) {
-              favoris[indix][str]!.add(cantique);
+              cc.add(cantique);
             }
+          }
+          if(cc.isNotEmpty){
+            favoris.add({str: cc});
           }
           indix++;
         }
@@ -140,17 +160,11 @@ class CantiqueController {
 
     final a=await ref
         .read(CantiqueDatasProvider)
-        .where('id',isEqualTo: id)
+        .where('id', isEqualTo: id)
         .get().then((value) => value);
 
-    if (a==null){
-
-    }
-    else{
-      await ref.read(CantiqueDatasProvider)
-          .doc(a.docs[0].id).delete();
-    }
-
+    await ref.read(CantiqueDatasProvider)
+        .doc(a.docs[0].id).delete();
 
   }
 

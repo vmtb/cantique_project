@@ -32,7 +32,7 @@ class AppText extends StatelessWidget {
       textAlign: align,
       overflow: overflow,
       maxLines: maxLines,
-      style: isNormal
+      style: !isNormal
           ? GoogleFonts.poppins(
               color: color==Colors.yellowAccent?getBlack(context):color,
               fontSize: size,

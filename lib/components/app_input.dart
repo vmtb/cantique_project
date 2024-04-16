@@ -48,10 +48,10 @@ class AppInput extends StatelessWidget {
           /*floatingLabelBehavior: FloatingLabelBehavior.never,*/
           suffixIcon: Icon(suffixIcon),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(12),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
         obscureText: isObscure,
@@ -61,7 +61,7 @@ class AppInput extends StatelessWidget {
         maxLines: 50,
         validator: validationBuilder.build(),
         textAlign: textAlign,
-        style:   GoogleFonts.poppins(fontSize: 16),
+        //style:   GoogleFonts(fontSize: 16),
       ),
     );
   }
