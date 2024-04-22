@@ -149,7 +149,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                               .read(listCantiqueRepo)
                               .where((element) => element.numero == int.parse(controller.text))
                               .toList();
-
+                          setState(() {
+                            isLoading = false;
+                          });
                           if (res.isNotEmpty) {
                             navigateToNextPage(context, PlayMusics(cantique: res.first));
                           } else {

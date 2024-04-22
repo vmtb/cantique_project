@@ -48,6 +48,7 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
   void initState() {
     super.initState();
     setDernierQuantique();
+    checkMyFavorite();
   }
 
   double scale = 1;
