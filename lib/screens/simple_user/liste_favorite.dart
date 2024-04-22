@@ -6,6 +6,8 @@ import 'package:cantique/utils/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../models/cantique_model.dart';
+
 class ListeLikedCantique extends ConsumerStatefulWidget {
   const ListeLikedCantique({Key? key}) : super(key: key);
 
@@ -16,6 +18,10 @@ class ListeLikedCantique extends ConsumerStatefulWidget {
 
 class _ListeLikedCantiqueState extends ConsumerState<ListeLikedCantique> {
   //CantiqueController cantiqueController;
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,14 +34,22 @@ class _ListeLikedCantiqueState extends ConsumerState<ListeLikedCantique> {
             ),
             onPressed: (() => Navigator.pop(context)),
           )),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          ref.watch(fetchFavoriteCantique).when(
-              data: (data) {
-                if (data.isEmpty) {
+      body: RefreshIndicator(
+        onRefresh: ()async {
+          ref.read(CantiqueCrudController).geCantiques();
+        },
+        child: ListView(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            Builder(
+              builder: (context) {
+                if(isLoading){
+                  return const CircularProgressIndicator();
+                }
+
+                if (datas.isEmpty) {
                   return const Center(
                     child: Text("No data"),
                   );
@@ -47,7 +61,7 @@ class _ListeLikedCantiqueState extends ConsumerState<ListeLikedCantique> {
                         navigateToNextPage(
                             context,
                             PlayMusics(
-                              cantique: data[index],
+                              cantique: datas[index],
                             ));
                       },
                       child: Container(
@@ -71,14 +85,14 @@ class _ListeLikedCantiqueState extends ConsumerState<ListeLikedCantique> {
                                     backgroundColor: getBackCont(context),
                                     radius: 15,
                                     child: AppText(
-                                      (data[index].id).toString(),
+                                      (datas[index].numero).toString(),
                                       color: getWhite(context),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ),
                                 AppText(
-                                  data[index].title,
+                                  datas[index].title,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ],
@@ -97,7 +111,7 @@ class _ListeLikedCantiqueState extends ConsumerState<ListeLikedCantique> {
                     );
                   },
                   shrinkWrap: true,
-                  itemCount: data.length,
+                  itemCount: datas.length,
                   separatorBuilder: (BuildContext context, int index) {
                     return Container(
                       margin: EdgeInsets.symmetric(
@@ -107,14 +121,30 @@ class _ListeLikedCantiqueState extends ConsumerState<ListeLikedCantique> {
                     );
                   },
                 );
-              },
-              error: (err, stackErr) {
-                print(stackErr!);
-                return const Text("Something is wrong...");
-              },
-              loading: () => const Center(child: CircularProgressIndicator())),
-        ],
+              }
+            )
+          ],
+        ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCantiqueFavList();
+  }
+
+  bool isLoading = false;
+
+  List<CantiqueModel> datas = [];
+  Future<void> getCantiqueFavList() async {
+    setState((){
+      isLoading = true;
+    });
+    datas = await ref.read(CantiqueCrudController).getFavoriteCantique();
+    setState(() {
+      isLoading = false;
+    });
   }
 }

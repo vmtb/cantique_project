@@ -12,8 +12,6 @@ import '../../models/cantique.dart';
 import '../../utils/app_const.dart';
 import '../../utils/app_styles.dart';
 import '../../utils/providers.dart';
-import 'cantique_list.dart';
-import 'package:file_picker/file_picker.dart';
 
 class AddCantique extends ConsumerStatefulWidget {
   final Cantique cantique;
@@ -373,27 +371,27 @@ class _AddCantiqueState extends ConsumerState<AddCantique> {
   }
 
   Future<void> pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result != null) {
-      filePicked = File(result.paths.first!);
-      fileName = filePicked.toString().split('/').last;
-      print("filename  -------------> $fileName");
-      if (fileName.contains('.')) {
-        setState(() {
-          fileName = fileName.replaceAll(RegExp(r"'"), "");
-          log(fileName);
-        });
-        log(fileName);
-        StringData.extension = fileName.split('.').last;
-        log(StringData.extension);
-      } else {
-        filePicked = null;
-        setState(() {
-          fileName = "Erreur de fichier !";
-        });
-        showFlushBar(context, "Choix de son",
-            "Veuillez choisir un son ayant d'extension !!!!\n\n (Ex: .mp3 , .avi , etc ) ");
-      }
-    }
+    // FilePickerResult? result = await FilePicker.platform.pickFiles();
+    // if (result != null) {
+    //   filePicked = File(result.paths.first!);
+    //   fileName = filePicked.toString().split('/').last;
+    //   print("filename  -------------> $fileName");
+    //   if (fileName.contains('.')) {
+    //     setState(() {
+    //       fileName = fileName.replaceAll(RegExp(r"'"), "");
+    //       log(fileName);
+    //     });
+    //     log(fileName);
+    //     StringData.extension = fileName.split('.').last;
+    //     log(StringData.extension);
+    //   } else {
+    //     filePicked = null;
+    //     setState(() {
+    //       fileName = "Erreur de fichier !";
+    //     });
+    //     showFlushBar(context, "Choix de son",
+    //         "Veuillez choisir un son ayant d'extension !!!!\n\n (Ex: .mp3 , .avi , etc ) ");
+    //   }
+    // }
   }
 }

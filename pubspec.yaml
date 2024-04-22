@@ -19,7 +19,6 @@ dependencies:
   firebase_core:
   firebase_auth:
   firebase_storage:
-  firebase_database: ^9.1.4
   form_validator:
   timer_controller:
   shared_preferences:
@@ -28,9 +27,8 @@ dependencies:
   uuid:
   google_fonts:
   cached_network_image:
-  file_picker: ^5.2.0+1
   audioplayers: ^0.20.1
-  dio: ^4.0.0
+  dio:
   path_provider: ^2.0.2
 
 

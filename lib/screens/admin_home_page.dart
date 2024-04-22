@@ -1,5 +1,4 @@
 import 'package:cantique/components/app_text.dart';
-import 'package:cantique/screens/cantique/cantique_list.dart';
 import 'package:cantique/screens/simple_user/liste_abc_cantique.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:cantique/utils/app_styles.dart';
@@ -40,7 +39,7 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
                 InkWell(
                   borderRadius: BorderRadius.circular(20),
                   onTap: () {
-                    navigateToNextPage(context, const CantiqueList());
+                    //navigateToNextPage(context, const CantiqueList());
                   },
                   child: Container(
                     decoration: BoxDecoration(

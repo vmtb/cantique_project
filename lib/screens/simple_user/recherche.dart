@@ -8,6 +8,9 @@ import 'package:cantique/utils/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../controllers/Cantique_crudControlller.dart';
+import '../../models/cantique_model.dart';
+
 class RechercheCantique extends ConsumerStatefulWidget {
   const RechercheCantique({Key? key}) : super(key: key);
 
@@ -25,7 +28,14 @@ class _RechercheCantiqueState extends ConsumerState<RechercheCantique> {
     super.dispose();
   }
 
-  List<Cantique> liste = [];
+
+  @override
+  void initState() {
+    super.initState();
+    liste = ref.read(listCantiqueRepo);
+  }
+
+  List<CantiqueModel> liste = [];
 
   @override
   Widget build(BuildContext context) {
@@ -81,26 +91,26 @@ class _RechercheCantiqueState extends ConsumerState<RechercheCantique> {
           const SizedBox(
             height: 20,
           ),
-          liste.isNotEmpty?ListOfResults(liste):ref.watch(fetchAllTest).when(
-              data: (data) {
-                if (data.isEmpty) {
-                  return const Center(
-                    child: Text("Aucune donnée...."),
-                  );
-                }
-                return ListOfResults(data);
-              },
-              error: (err, stackErr) {
-                print(stackErr!);
-                return const Text("Something is wrong...");
-              },
-              loading: () => const Center(child: CircularProgressIndicator())),
+
+          isLoading? const CircularProgressIndicator():
+          ListOfResults(liste.isEmpty?ref.read(listCantiqueRepo):liste),
         ],
       ),
     );
   }
 
-  void searchCantique(String querry) {
+  bool isLoading = false;
+  Future<void> searchCantique(String querry) async {
+    if(ref.read(listCantiqueRepo).isEmpty){
+      setState(() {
+        isLoading = true;
+      });
+      await ref.read(CantiqueCrudController).geCantiques();
+      setState(() {
+        isLoading = false;
+      });
+    }
+
     if(querry.trim().isEmpty){
       setState(() {
         liste = [];
@@ -108,7 +118,7 @@ class _RechercheCantiqueState extends ConsumerState<RechercheCantique> {
       return;
     }
 
-    final suggestions = ref.read(fetchAllTest).value!.where((cantique) {
+    final suggestions = ref.read(listCantiqueRepo).where((cantique) {
       final input = querry.trim().toLowerCase();
       final cantiqueTitle = cantique.title.toLowerCase();
       log(cantiqueTitle);
@@ -120,7 +130,7 @@ class _RechercheCantiqueState extends ConsumerState<RechercheCantique> {
     });
   }
 
-  Widget ListOfResults(List<Cantique> data) {
+  Widget ListOfResults(List<CantiqueModel> data) {
     return ListView.separated(
       itemBuilder: (context, index) {
         return GestureDetector(

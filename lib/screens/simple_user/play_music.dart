@@ -1,9 +1,11 @@
 import 'dart:io';
 
-import 'package:cantique/components/app_button.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cantique/components/app_text.dart';
+import 'package:cantique/controllers/Cantique_crudControlller.dart';
 import 'package:cantique/controllers/settings_controller.dart';
 import 'package:cantique/models/cantique.dart';
+import 'package:cantique/models/cantique_model.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
 import 'package:cantique/utils/app_styles.dart';
@@ -12,12 +14,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PlayMusics extends ConsumerStatefulWidget {
   PlayMusics({Key? key, required this.cantique}) : super(key: key);
-  Cantique cantique;
+  CantiqueModel cantique;
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PlayMusicsState();
 }
@@ -45,14 +47,14 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
   @override
   void initState() {
     super.initState();
+    setDernierQuantique();
   }
 
   double scale = 1;
 
   Future setAudio() async {
-    String url = widget.cantique.songUrl;
-    await audiPlayer.setUrl(url,
-        isLocal: !widget.cantique.songUrl.contains("http"));
+    String url = widget.cantique.song_url;
+    await audiPlayer.setUrl(url, isLocal: !widget.cantique.song_url.contains("http"));
 
     audiPlayer.onPlayerStateChanged.listen((event) {
       setState(() {
@@ -74,7 +76,8 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
 
   @override
   Widget build(BuildContext context) {
-    bool isLocal = !widget.cantique.songUrl.contains("http");
+    bool isLocal = !widget.cantique.song_url.contains("http");
+    widget.cantique.couplets!.sort((e,b)=>e.ordre.compareTo(b.ordre));
     setAudio();
     return Scaffold(
       appBar: AppBar(
@@ -87,14 +90,17 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
           onPressed: (() => Navigator.pop(context)),
         ),
         actions: [
-          ref.watch(darkFutureProvider).when(data: (data){
-            return IconButton(
-              onPressed: (() async{
-                ref.read(settingsController).saveDark(!data);
-              }),
-              icon: Icon(data?Icons.light_mode_rounded:Icons.dark_mode_rounded),
-            );
-          }, error: errorLoading, loading: loadingError),
+          ref.watch(darkFutureProvider).when(
+              data: (data) {
+                return IconButton(
+                  onPressed: (() async {
+                    ref.read(settingsController).saveDark(!data);
+                  }),
+                  icon: Icon(data ? Icons.light_mode_rounded : Icons.dark_mode_rounded),
+                );
+              },
+              error: errorLoading,
+              loading: loadingError),
           IconButton(
             onPressed: (() {}),
             icon: const Icon(Icons.share),
@@ -102,22 +108,22 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
         ],
       ),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         child: InteractiveViewer(
           //clipBehavior: Clip.none,
           transformationController: _controller1,
           //panEnabled: false,
           scaleEnabled: false,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             const SizedBox(
-              height: 50,
+              height: 20,
             ),
             Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: getSize(context).width * 0.07),
+              padding: EdgeInsets.symmetric(horizontal: getSize(context).width * 0.07),
 
               //color: Colors.green[100],
-          /*    child: Row(
+              /*    child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -167,16 +173,18 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
                 ],
               ),*/
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            AppText(
-              widget.cantique.id.toString() + "- " + widget.cantique.title,
-              size: 25,
-              color: getPrimaryColor(context),
-              isNormal: false,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AppText(
+                widget.cantique.numero.toString() + "- " + widget.cantique.title,
+                size: 25,
+                color: getPrimaryColor(context),
+                isNormal: false,
+                maxLines: 2,
+                align: TextAlign.center,
+                weight: FontWeight.bold,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(
               height: 15,
@@ -184,18 +192,18 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
             AppText(
               "Mélodie: ${widget.cantique.melodie}",
               size: 20,
+              align: TextAlign.center,
               color: getPrimaryColor(context),
               isNormal: false,
             ),
             const SizedBox(
               height: 20,
             ),
-            ...List.generate(widget.cantique.contenu.length, (index) {
-              Map<String, String> data =
-                  treatContent(widget.cantique.contenu[index]);
+            ...List.generate(widget.cantique.couplets!.length, (index) {
+              var couplet = widget.cantique.couplets![index];
 
-              String key = data.keys.first;
-              String content = data.values.first;
+              String key = couplet.refrain==1?"Refrain":couplet.ordre.toString();
+              String content = couplet.contenu;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -220,182 +228,171 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
             const SizedBox(
               height: 20,
             ),
-            if(widget.cantique.songUrl.isNotEmpty)
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            if (widget.cantique.song_url.isNotEmpty)
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(formatTime(position)),
+                        Slider(
+                            min: 0,
+                            max: 100,
+                            value: duration.inSeconds == 0
+                                ? 0
+                                : position.inSeconds.toDouble() * 100 / duration.inSeconds.toDouble(),
+                            onChanged: ((value) async {
+                              final position = Duration(seconds: value * duration.inSeconds.toDouble() ~/ 100);
+                              await audiPlayer.seek(position);
+                              await audiPlayer.resume();
+                            })),
+                        Text(formatTime(duration - position)),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text(formatTime(position)),
-                      Slider(
-                          min: 0,
-                          max: 100,
-                          value: duration.inSeconds == 0
-                              ? 0
-                              : position.inSeconds.toDouble() *
-                                  100 /
-                                  duration.inSeconds.toDouble(),
-                          onChanged: ((value) async {
-                            final position = Duration(
-                                seconds:
-                                    value * duration.inSeconds.toDouble() ~/ 100);
-                            await audiPlayer.seek(position);
+                      InkWell(
+                        onTap: (() async {
+                          if (!isPlaying) {
                             await audiPlayer.resume();
-                          })),
-                      Text(formatTime(duration - position)),
+                          }
+                        }),
+                        child: Container(
+                          height: 30,
+                          width: 70,
+                          padding: const EdgeInsets.only(
+                            bottom: 8,
+                            top: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: !isPlaying ? Colors.green : Colors.grey,
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          //child: IconButton(
+                          child: Icon(
+                            Icons.play_arrow,
+                            color: getWhite(context),
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (() async {
+                          if (isPlaying) {
+                            await audiPlayer.pause();
+                          }
+                        }),
+                        child: Container(
+                          height: 30,
+                          width: 70,
+                          padding: const EdgeInsets.only(
+                            bottom: 8,
+                            top: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isPlaying ? getBackCont(context) : Colors.grey,
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          //child: IconButton(
+                          child: Icon(
+                            Icons.pause,
+                            color: getWhite(context),
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (() async {
+                          if (isPlaying || position.inSeconds != 0) {
+                            await audiPlayer.seek(const Duration(seconds: 0));
+                            await audiPlayer.pause();
+                          }
+                        }),
+                        child: Container(
+                          height: 30,
+                          width: 70,
+                          padding: const EdgeInsets.only(
+                            bottom: 8,
+                            top: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: (isPlaying || position.inSeconds != 0) ? Colors.red : Colors.grey,
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Icon(
+                            Icons.square,
+                            color: getWhite(context),
+                            size: 20,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    InkWell(
-                      onTap: (() async {
-                        if (!isPlaying) {
-                          await audiPlayer.resume();
-                        }
-                      }),
-                      child: Container(
-                        height: 30,
-                        width: 70,
-                        padding: const EdgeInsets.only(
-                          bottom: 8,
-                          top: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: !isPlaying ? Colors.green : Colors.grey,
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(7),
-                        ),
-                        //child: IconButton(
-                        child: Icon(
-                          Icons.play_arrow,
-                          color: getWhite(context),
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: (() async {
-                        if (isPlaying) {
-                          await audiPlayer.pause();
-                        }
-                      }),
-                      child: Container(
-                        height: 30,
-                        width: 70,
-                        padding: const EdgeInsets.only(
-                          bottom: 8,
-                          top: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isPlaying ? getBackCont(context) : Colors.grey,
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(7),
-                        ),
-                        //child: IconButton(
-                        child: Icon(
-                          Icons.pause,
-                          color: getWhite(context),
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: (() async {
-                        if (isPlaying || position.inSeconds != 0) {
-                          await audiPlayer.seek(const Duration(seconds: 0));
-                          await audiPlayer.pause();
-                        }
-                      }),
-                      child: Container(
-                        height: 30,
-                        width: 70,
-                        padding: const EdgeInsets.only(
-                          bottom: 8,
-                          top: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: (isPlaying || position.inSeconds != 0)
-                              ? Colors.red
-                              : Colors.grey,
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(7),
-                        ),
-                        child: Icon(
-                          Icons.square,
-                          color: getWhite(context),
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                isLocal
-                    ? Row(
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.only(left: 20.0),
-                            child: AppText("Téléchargé "),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.check_circle,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ],
-                      )
-                    : GestureDetector(
-                        onTap: () async {
-                          setState(() {
-                            isDownloading = true;
-                          });
-                          await download().then((value) async {
-                            if (value != null) {
-                              StringData.cantiqueDowloaded = {
-                                widget.cantique.id.toString(): value.path
-                              };
-                              await ref.read(CantiqueCrudController).downloadCantique();
-                              ref.refresh(fetchAllTest);
-
-                              setState(() {
-                                isLocal = true;
-                                isDownloading = false;
-                              });
-
-                            }
-                          });
-                        },
-                        child: Row(
-                          children: [
-                            const Padding(
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  isLocal
+                      ? Row(
+                          children: const [
+                            Padding(
                               padding: EdgeInsets.only(left: 20.0),
-                              child: AppText("Télécharger ? "),
+                              child: AppText("Téléchargé "),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: isDownloading
-                                  ? const CircularProgressIndicator()
-                                  : const Icon(Icons.download),
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                              ),
                             ),
                           ],
+                        )
+                      : GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              isDownloading = true;
+                            });
+                            await download().then((value) async {
+                              if (value != null) {
+                                StringData.cantiqueDowloaded = {widget.cantique.id.toString(): value.path};
+                                await ref.read(CantiqueCrudController).downloadCantique();
+                                ref.refresh(fetchAllTest);
+
+                                setState(() {
+                                  isLocal = true;
+                                  isDownloading = false;
+                                });
+                              }
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(left: 20.0),
+                                child: AppText("Télécharger ? "),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: isDownloading ? const CircularProgressIndicator() : const Icon(Icons.download),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                const SizedBox(
-                  height: 20,
-                ),
-              ],
-            ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
           ]),
         ),
       ),
@@ -408,19 +405,16 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
           children: [
             IconButton(
                 onPressed: (() async {
-                  StringData.id = widget.cantique.id - 1;
-                  Cantique? value = await ref
-                      .read(CantiqueCrudController)
-                      .getResultOfSearchById();
-                  if (value is Cantique) {
+                  int currentId = ref.read(listCantiqueRepo).indexOf(widget.cantique);
+
+                  if (currentId>0) {
                     setState(() {
-                      widget.cantique = value;
+                      widget.cantique = ref.read(listCantiqueRepo)[currentId-1];
+                      checkMyFavorite();
                     });
                   } else {
-                    showFlushBar(context, "Recherche",
-                        "Vous êtes sur la première cantique");
+                    showFlushBar(context, "Recherche", "Vous êtes sur le premier cantique");
                   }
-                  ref.read(fetchCantiqueById).whenData((value) {});
                 }),
                 icon: Icon(
                   Icons.arrow_back_ios,
@@ -439,19 +433,13 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
                 )),
             IconButton(
                 onPressed: (() async {
-                  setState(() {
-                    widget.cantique.isFavourite = !widget.cantique.isFavourite;
-                  });
-
-                  StringData.myBool = widget.cantique.isFavourite;
+                  StringData.addToFavorite = !isFavorite;
                   StringData.favoriteId = widget.cantique.id;
-                  ref.refresh(favoriseOrUnfavorise);
-                  //ref.read(favoriseOrUnfavorise).whenData((value) => null);
+                  ref.read(CantiqueCrudController).likeOrUnlikeCantique();
+                  checkMyFavorite();
                 }),
                 icon: Icon(
-                  widget.cantique.isFavourite
-                      ? Icons.favorite
-                      : Icons.favorite_border,
+                  isFavorite ? Icons.favorite : Icons.favorite_border,
                   color: getWhite(context),
                 )),
             IconButton(
@@ -467,16 +455,15 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
             IconButton(
               onPressed: (() async {
                 StringData.id = widget.cantique.id + 1;
-                Cantique? value = await ref
-                    .read(CantiqueCrudController)
-                    .getResultOfSearchById();
-                if (value is Cantique) {
+                int currentId = ref.read(listCantiqueRepo).indexOf(widget.cantique);
+
+                if (currentId<ref.read(listCantiqueRepo).length-1) {
                   setState(() {
-                    widget.cantique = value;
+                    widget.cantique = ref.read(listCantiqueRepo)[currentId+1];
+                    checkMyFavorite();
                   });
                 } else {
-                  showFlushBar(context, "Recherche",
-                      "Vous êtes sur la dernière cantique");
+                  showFlushBar(context, "Recherche", "Vous êtes sur le dernier cantique");
                 }
               }),
               icon: Icon(
@@ -493,8 +480,7 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
   String formatTime(Duration position) {
     int seconds = position.inSeconds.toInt();
 
-    String minuteString =
-        '${(seconds / 60).floor() < 10 ? 0 : ''}${(seconds / 60).floor()}';
+    String minuteString = '${(seconds / 60).floor() < 10 ? 0 : ''}${(seconds / 60).floor()}';
     String secondString = '${seconds % 60 < 10 ? 0 : ''}${seconds % 60}';
     return '$minuteString:$secondString';
   }
@@ -512,16 +498,16 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
     log("start-------------->");
     final appStorage = await getApplicationDocumentsDirectory();
 
-    log('${appStorage.path}/localMusiques${widget.cantique.id}.${widget.cantique.songUrl.split("__")[1]}');
+    log('${appStorage.path}/localMusiques${widget.cantique.id}.${widget.cantique.song_url.split("/").last}');
 
-    final file = File(
-        '${appStorage.path}/localMusiques${widget.cantique.id}.${widget.cantique.songUrl.split("__")[1]}');
+    final file =
+        File('${appStorage.path}/localMusiques${widget.cantique.id}.${widget.cantique.song_url.split("/").last}');
     try {
-      final response = await Dio().get(widget.cantique.songUrl,
+      final response = await Dio().get(widget.cantique.song_url,
           options: Options(
             responseType: ResponseType.bytes,
             followRedirects: false,
-            receiveTimeout: 0,
+            receiveTimeout: const Duration(seconds: 3),
           ));
 
       final raf = file.openSync(mode: FileMode.write);
@@ -532,5 +518,18 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
     } catch (e) {
       return null;
     }
+  }
+
+  bool isFavorite = false;
+  checkMyFavorite() async {
+    List<CantiqueModel> list = await ref.read(CantiqueCrudController).getFavoriteCantique();
+    isFavorite = list.where((element) => element.id==widget.cantique.id).isNotEmpty;
+    setState(() {
+
+    });
+  }
+
+  void setDernierQuantique() {
+    ref.read(statController).updateStat(widget.cantique.id, 0);
   }
 }

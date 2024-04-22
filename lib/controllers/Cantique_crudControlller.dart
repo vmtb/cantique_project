@@ -1,51 +1,49 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:cantique/models/cantique.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cantique/utils/helper_preferences.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/cantique_model.dart';
+import '../repositories/cantique_repo.dart';
 import '../utils/providers.dart';
+
+
+final StateProvider<List<CantiqueModel>> listCantiqueRepo = StateProvider<List<CantiqueModel>>((ref) => []);
 
 class CantiqueController {
   final Ref ref;
+
   CantiqueController(this.ref);
 
   Future<void> saveToCantique(Cantique c, int id, String title, File? file, List<String> content) async {
     //print("sds");
     log("adding....");
-    if(file==null){
-      Cantique cantique = c.copyWith(
-          id: id,
-          isFavourite: false,
-          title: title,
-          contenu: content,
-          time: DateTime.now().toString());
+    if (file == null) {
+      Cantique cantique =
+          c.copyWith(id: id, isFavourite: false, title: title, contenu: content, time: DateTime.now().toString());
       await saveOrUpdate(cantique);
-    }else {
+    } else {
       await addFileToStorage(file).then((value) async {
-      String url = value;
-      log("save at $url....");
-      Cantique cantique = c.copyWith(
-          id: id,
-          isFavourite: false,
-          title: title,
-          contenu: content,
-          songUrl: url,
-          time: DateTime.now().toString());
-      await saveOrUpdate(cantique);
+        String url = value;
+        log("save at $url....");
+        Cantique cantique = c.copyWith(
+            id: id, isFavourite: false, title: title, contenu: content, songUrl: url, time: DateTime.now().toString());
+        await saveOrUpdate(cantique);
       });
     }
-
   }
+
   Future saveOrUpdate(Cantique c) async {
-    if(c.key.isEmpty) {
+    if (c.key.isEmpty) {
       await ref.read(CantiqueDatasProvider).add(c.toMap());
-    }else{
+    } else {
       await ref.read(CantiqueDatasProvider).doc(c.key).set(c.toMap());
     }
   }
@@ -65,11 +63,7 @@ class CantiqueController {
     Map<dynamic, dynamic> downloadedListe = await listeDownloaded();
     print(downloadedListe);
 
-    await ref
-        .read(CantiqueDatasProvider)
-        .orderBy("id", descending: false)
-        .get()
-        .then((value) {
+    await ref.read(CantiqueDatasProvider).orderBy("id", descending: false).get().then((value) {
       for (var element in value.docs) {
         log(element.data());
         Cantique newC = Cantique.fromMap(element.data());
@@ -79,7 +73,7 @@ class CantiqueController {
         if (downloadedListe.containsKey(newC.id.toString())) {
           newC.songUrl = downloadedListe[newC.id.toString()];
         }
-        newC=newC.copyWith(key: element.id);
+        newC = newC.copyWith(key: element.id);
 
         models.add(newC);
       }
@@ -88,23 +82,25 @@ class CantiqueController {
     return models;
   }
 
-  Future<List<Cantique>> getFavoriteCantique() async {
-    List<Cantique> favoris = [];
+  Future<List<CantiqueModel>> getFavoriteCantique() async {
+    List<CantiqueModel> favoris = [];
+
+    if(ref.read(listCantiqueRepo).isEmpty){
+      await geCantiques();
+    }
+
     List<dynamic> favoriteListe = await getListeIdFavorite();
-    ref.watch(fetchAllTest).whenData(
-      (value) {
-        for (Cantique cantique in value) {
-          if (favoriteListe.contains(cantique.id)) {
-            favoris.add(cantique);
-          }
-        }
-      },
-    );
+    for (CantiqueModel cantique in ref.read(listCantiqueRepo)) {
+      if (favoriteListe.contains(cantique.id)) {
+        favoris.add(cantique);
+      }
+    }
+
     return favoris;
   }
 
-  Future<List<Map<String, List<Cantique>>>> getAbcCantique() async {
-    List<Map<String, List<Cantique>>> favoris = [];
+  Future<List<Map<String, List<CantiqueModel>>>> getAbcCantique() async {
+    List<Map<String, List<CantiqueModel>>> favoris = [];
     int indix = 0;
     List<String> liste = [
       "A",
@@ -134,62 +130,38 @@ class CantiqueController {
       "Y",
       "Z"
     ];
-
-    ref.watch(fetchAllTest).whenData(
-      (value) {
-        for (String str in liste) {
-
-          List<Cantique>cc=[];
-          for (Cantique cantique in value) {
-            if (cantique.title.toUpperCase().startsWith(str)) {
-              cc.add(cantique);
-            }
-          }
-          if(cc.isNotEmpty){
-            favoris.add({str: cc});
-          }
-          indix++;
+    if(ref.read(listCantiqueRepo).isEmpty){
+      await geCantiques();
+    }
+    for (String str in liste) {
+      List<CantiqueModel> cc = [];
+      for (CantiqueModel cantique in ref.read(listCantiqueRepo)) {
+        if (cantique.title.toUpperCase().startsWith(str)) {
+          cc.add(cantique);
         }
-      },
-    );
+      }
+      if (cc.isNotEmpty) {
+        favoris.add({str: cc});
+      }
+      indix++;
+    }
 
     return favoris;
   }
 
-  Future<void> delete(int id) async{
+  Future<void> delete(int id) async {
+    final a = await ref.read(CantiqueDatasProvider).where('id', isEqualTo: id).get().then((value) => value);
 
-    final a=await ref
-        .read(CantiqueDatasProvider)
-        .where('id', isEqualTo: id)
-        .get().then((value) => value);
-
-    await ref.read(CantiqueDatasProvider)
-        .doc(a.docs[0].id).delete();
-
+    await ref.read(CantiqueDatasProvider).doc(a.docs[0].id).delete();
   }
 
-  Future<int> getCurrentId() async {
-    int myId = 1;
-    final snapshot = await ref.read(databaseRef).get();
-
-    if (snapshot.exists) {
-      Map<dynamic, dynamic> json = snapshot.value as Map<dynamic, dynamic>;
-      myId = json['id']! + 1;
-      ref.read(databaseRef).set({"id": myId});
-    } else {
-      ref.read(databaseRef).set({"id": 1});
-    }
-
-    return myId;
-  }
 
   Future<Cantique?> searchCantique() async {
     log("Searching...");
     try {
       log("try Searching...");
       List<Cantique>? value = ref.read(fetchAllTest).value;
-      List<Cantique> filtered =
-          value!.where((element) => element.id == StringData.id).toList();
+      List<Cantique> filtered = value!.where((element) => element.id == StringData.id).toList();
       if (filtered.isNotEmpty) {
         return filtered[0];
       }
@@ -199,14 +171,10 @@ class CantiqueController {
     return null;
   }
 
-  Future<Cantique?> getResultOfSearchById() async {
-    // ignore: await_only_futures
-    await ref.refresh(fetchCantiqueById);
-
-    return ref.read(fetchCantiqueById).value;
-  }
 
   Future<void> likeOrUnlikeCantique() async {
+
+
     final prefs = await SharedPreferences.getInstance();
 
     if (!prefs.containsKey(StringData.favoritesKey)) {
@@ -214,7 +182,8 @@ class CantiqueController {
       prefs.setString(StringData.favoritesKey, data);
     }
 
-    if (StringData.myBool) {
+    //Enregistrer les IDS dans une liste
+    if (StringData.addToFavorite) {
       final data = jsonDecode(prefs.getString(StringData.favoritesKey)!);
       List<dynamic> liste = data as List<dynamic>;
       liste.add(StringData.favoriteId);
@@ -272,16 +241,21 @@ class CantiqueController {
   }
 
   Future<Map<dynamic, dynamic>> listeDownloaded() async {
-
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey(StringData.localStorageCantique)) {
       String data = jsonEncode({});
       prefs.setString(StringData.localStorageCantique, data);
       return {};
     } else {
-      final data =
-          jsonDecode(prefs.getString(StringData.localStorageCantique)!);
+      final data = jsonDecode(prefs.getString(StringData.localStorageCantique)!);
       return data as Map<dynamic, dynamic>;
     }
+  }
+
+  Future<List<CantiqueModel>> geCantiques() async {
+    var list =  (await ref.read(cantiqueRepo).getWhere({"active": 1})).data;
+    log("list $list");
+    ref.read(listCantiqueRepo.notifier).state = list;
+    return list;
   }
 }

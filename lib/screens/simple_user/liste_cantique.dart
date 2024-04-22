@@ -1,5 +1,6 @@
 import 'package:cantique/components/app_text.dart';
 import 'package:cantique/models/cantique.dart';
+import 'package:cantique/models/cantique_model.dart';
 import 'package:cantique/screens/simple_user/play_music.dart';
 import 'package:cantique/utils/app_const.dart';
 import 'package:cantique/utils/app_func.dart';
@@ -7,6 +8,8 @@ import 'package:cantique/utils/app_styles.dart';
 import 'package:cantique/utils/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../controllers/Cantique_crudControlller.dart';
 
 class ListeCantique extends ConsumerStatefulWidget {
   const ListeCantique({Key? key}) : super(key: key);
@@ -24,7 +27,15 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
     super.dispose();
   }
 
-  List<Cantique> liste = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    liste = ref.read(listCantiqueRepo);
+  }
+
+  List<CantiqueModel> liste = [];
 
   @override
   Widget build(BuildContext context) {
@@ -82,25 +93,17 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
             height: 15,
           ),
           Expanded(
-            child: liste.isNotEmpty? ListOfResults(liste):ref.watch(fetchAllTest).when(
-                data: ((data) {
-                  setState(() {
-                    liste = data;
-                  });
-                  if (data.isEmpty) {
-                    return const Center(
-                      child: Text("Aucune donnée trouvée..."),
-                    );
-                  }
-                  return ListOfResults(data);
-                }),
-                error: (err, stackErr) {
-                  print(stackErr!);
-                  return const Text("Something is wrong...");
-                },
-                loading: (() => const Center(
-                      child: CircularProgressIndicator(),
-                    ))),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                loadCantiques();
+              },
+              child: ListView(
+                children: [
+                  isLoading? const Center(child: CircularProgressIndicator()):
+                  ListOfResults(liste.isEmpty?ref.read(listCantiqueRepo):liste),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -115,7 +118,7 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
       return;
     }
 
-    final suggestions = ref.read(fetchAllTest).value!.where((cantique) {
+    final suggestions = ref.read(listCantiqueRepo).where((cantique) {
       final input = querry.trim().toLowerCase();
       final cantiqueTitle = cantique.title.toLowerCase();
       log(cantiqueTitle);
@@ -127,7 +130,8 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
     });
   }
 
-  Widget ListOfResults(List<Cantique> data) {
+  Widget ListOfResults(List<CantiqueModel> data) {
+    log(data);
     return ListView.separated(
       itemBuilder: (context, index) {
         return GestureDetector(
@@ -160,7 +164,7 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
                         backgroundColor: getBackCont(context),
                         radius: 15,
                         child: AppText(
-                          (data[index].id).toString(),
+                          (data[index].numero).toString(),
                           color: getWhite(context),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -196,6 +200,20 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
         );
       },
     );
+  }
+
+  bool isLoading = false;
+  Future<void> loadCantiques() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    var allCantique = await ref.read(CantiqueCrudController).geCantiques();
+    ref.read(listCantiqueRepo.notifier).state = allCantique;
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
 

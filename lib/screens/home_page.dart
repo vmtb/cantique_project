@@ -12,7 +12,9 @@ import 'package:cantique/utils/providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../components/app_text.dart';
+import '../controllers/Cantique_crudControlller.dart';
 import 'cantique/loginscreen.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -34,6 +36,14 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    checkLoginAndStat();
+  }
+
   bool isLoading = false;
 
   @override
@@ -43,20 +53,23 @@ class _HomePageState extends ConsumerState<HomePage> {
         title: Text(StringData.accueil),
         leading: const Icon(Icons.home),
         actions: [
-          ref.watch(darkFutureProvider).when(data: (data){
-            return IconButton(
-              onPressed: (() async{
-                ref.read(settingsController).saveDark(!data);
-              }),
-              icon: Icon(data?Icons.light_mode_rounded:Icons.dark_mode_rounded),
-            );
-          }, error: errorLoading, loading: loadingError),
-          IconButton(
-            onPressed: (() {
-              navigateToNextPage(context, const LoginScreen());
-            }),
-            icon: const Icon(Icons.admin_panel_settings_outlined),
-          ),
+          ref.watch(darkFutureProvider).when(
+              data: (data) {
+                return IconButton(
+                  onPressed: (() async {
+                    ref.read(settingsController).saveDark(!data);
+                  }),
+                  icon: Icon(data ? Icons.light_mode_rounded : Icons.dark_mode_rounded),
+                );
+              },
+              error: errorLoading,
+              loading: loadingError),
+          // IconButton(
+          //   onPressed: (() {
+          //     navigateToNextPage(context, const LoginScreen());
+          //   }),
+          //   icon: const Icon(Icons.admin_panel_settings_outlined),
+          // ),
         ],
       ),
       body: SafeArea(
@@ -68,8 +81,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 height: 50,
               ),
               Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: getSize(context).width * 0.07),
+                padding: EdgeInsets.symmetric(horizontal: getSize(context).width * 0.07),
                 height: 60,
                 //color: Colors.green[100],
                 child: Row(
@@ -115,8 +127,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 1.0, top: 1),
+                                    padding: const EdgeInsets.only(bottom: 1.0, top: 1),
                                     child: Icon(
                                       CupertinoIcons.forward,
                                       color: getWhite(context),
@@ -125,8 +136,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 ]),
                       onTap: () async {
                         print("go pressed");
-                        if (controller.text != "" &&
-                            int.tryParse(controller.text) != null) {
+                        if (controller.text != "" && int.tryParse(controller.text) != null) {
                           print("go pressed OKKK");
 
                           setState(() {
@@ -134,28 +144,20 @@ class _HomePageState extends ConsumerState<HomePage> {
                           });
 
                           StringData.id = int.parse(controller.text);
-                          
-                          await ref
-                              .read(CantiqueCrudController)
-                              .getResultOfSearchById()
-                              .then(
-                            (value) {
-                              setState(() {
-                                isLoading = false;
-                              });
-                              if (value != null) {
-                                navigateToNextPage(
-                                    context, PlayMusics(cantique: value));
-                              } else {
-                                showFlushBar(context, "Recherche",
-                                    "Veuillez saisir un numero valide  !!!!");
-                              }
-                            },
-                          );
+
+                          var res = ref
+                              .read(listCantiqueRepo)
+                              .where((element) => element.numero == int.parse(controller.text))
+                              .toList();
+
+                          if (res.isNotEmpty) {
+                            navigateToNextPage(context, PlayMusics(cantique: res.first));
+                          } else {
+                            showFlushBar(context, "Recherche", "Veuillez saisir un numero valide  !!!!");
+                          }
                         } else {
                           log("go pressed Noooo");
-                          showFlushBar(context, "Recherche",
-                              "Veuillez saisir un numero valide");
+                          showFlushBar(context, "Recherche", "Veuillez saisir un numero valide");
                         }
                       },
                     ),
@@ -176,9 +178,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         navigateToNextPage(context, const ListeLikedCantique());
                       },
                       child: Container(
-                        decoration: BoxDecoration(
-                            color: getBackCont(context),
-                            borderRadius: BorderRadius.circular(20)),
+                        decoration: BoxDecoration(color: getBackCont(context), borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -204,9 +204,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         navigateToNextPage(context, const ListeAbcCantique());
                       }),
                       child: Container(
-                        decoration: BoxDecoration(
-                            color: getBackCont(context),
-                            borderRadius: BorderRadius.circular(20)),
+                        decoration: BoxDecoration(color: getBackCont(context), borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -232,9 +230,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         navigateToNextPage(context, const RechercheCantique());
                       }),
                       child: Container(
-                        decoration: BoxDecoration(
-                            color: getBackCont(context),
-                            borderRadius: BorderRadius.circular(20)),
+                        decoration: BoxDecoration(color: getBackCont(context), borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -256,12 +252,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ),
                     ),
                     InkWell(
-                      onTap: (() =>
-                          navigateToNextPage(context, const ListeCantique())),
+                      onTap: (() => navigateToNextPage(context, const ListeCantique())),
                       child: Container(
-                        decoration: BoxDecoration(
-                            color: getBackCont(context),
-                            borderRadius: BorderRadius.circular(20)),
+                        decoration: BoxDecoration(color: getBackCont(context), borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -311,5 +304,13 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
       ),
     );
+  }
+
+  Future<void> checkLoginAndStat() async {
+    await ref.read(statController).getMyStat();
+
+    var allCantique = await ref.read(CantiqueCrudController).geCantiques();
+    ref.read(listCantiqueRepo.notifier).state = allCantique;
+    ref.read(statController).updateStat(0, 1);
   }
 }

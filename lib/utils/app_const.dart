@@ -7,6 +7,19 @@ const secondaryColor_ = Color(0xff368fc7);
 const separator1 = " \t\r\r\t ";
 const separator2 = " \t\b\b\t ";
 
+class Urls {
+  static String HOST = "https://cantiquejjc.vvfinances.com/api";
+  static String IHOST = "https://cantiquejjc.vvfinances.com/";
+
+  static String SETTING_URL = "$HOST/setting";
+  static String COUPLET_URL = "$HOST/couplet";
+  static String CANTIQUE_URL = "$HOST/cantique";
+  static String VIDEOACCEUIL_URL = "$HOST/video-acceuil";
+  static String STAT_URL = "$HOST/statistique";
+  //
+  static String WHERE_URL = "/where";
+}
+
 class StringData {
   static String accueil = "Accueil";
   static String entrerNumero = "Entrer un numero";
@@ -22,7 +35,7 @@ class StringData {
   static String rechercheCantique = "";
   static int id = 1;
   static int couplet = 0;
-  static bool myBool = false;
+  static bool addToFavorite = false;
   static int favoriteId = 1;
   static String favoritesKey = "favorites";
   static String localStorageCantique = "MesCantiquesSauvegarde";
