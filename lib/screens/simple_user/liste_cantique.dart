@@ -190,6 +190,7 @@ class _ListeCantiqueState extends ConsumerState<ListeCantique> {
         );
       },
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: data.length,
       separatorBuilder: (BuildContext context, int index) {
         return Container(

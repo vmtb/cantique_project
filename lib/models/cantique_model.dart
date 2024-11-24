@@ -85,7 +85,7 @@ class CantiqueModel{
       id: map['id'] as int,
       numero: map['numero'] as int,
       title: map['title'] as String,
-      song_url: Urls.IHOST+  map['song_url'] ,
+      song_url: Urls.IHOST+  (map['song_url']??"") ,
       melodie: map['melodie'] as String,
       active: map['active'] as int,
       couplets: map['couplets']==null?[]:map['couplets'].map<Couplet>((e)=>Couplet.fromMap(e)).toList()

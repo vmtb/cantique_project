@@ -69,11 +69,11 @@ class Statistique{
 
   factory Statistique.fromMap(Map<String, dynamic> map) {
     return Statistique(
-      user_id: map['user_id'] as String,
-      id: map['id'] as int,
-      last_open: map['last_open'] as String,
-      last_cantique_open_id: map['last_cantique_open_id'] as int,
-      open: map['open'] as int,
+      user_id: map['user_id']??"",
+      id: map['id']??0,
+      last_open: map['last_open']??"",
+      last_cantique_open_id: map['last_cantique_open_id']??0,
+      open: map['open']??0,
     );
   }
 
