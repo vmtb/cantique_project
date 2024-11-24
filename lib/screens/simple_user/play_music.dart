@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../models/couplet_model.dart';
+
 class PlayMusics extends ConsumerStatefulWidget {
   PlayMusics({Key? key, required this.cantique}) : super(key: key);
   CantiqueModel cantique;
@@ -34,6 +36,7 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
   Duration position = Duration.zero;
   bool isDownloading = false;
 
+  List<Couplet> listWithOUtRefrain = [];
   final TransformationController _controller1 = TransformationController();
 
   @override
@@ -47,6 +50,12 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
   @override
   void initState() {
     super.initState();
+
+    try {
+      listWithOUtRefrain  =  widget.cantique.couplets!.where((e)=>e.refrain!=1).toList();
+    } catch (e) {
+      print(e);
+    }
     setDernierQuantique();
     checkMyFavorite();
   }
@@ -110,7 +119,7 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         child: InteractiveViewer(
           //clipBehavior: Clip.none,
           transformationController: _controller1,
@@ -202,8 +211,9 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
             ),
             ...List.generate(widget.cantique.couplets!.length, (index) {
               var couplet = widget.cantique.couplets![index];
+              int i = listWithOUtRefrain.indexOf(couplet)+1;
 
-              String key = couplet.refrain==1?"Refrain":couplet.ordre.toString();
+              String key = couplet.refrain==1 ? "Refrain" : i.toString();
               String content = couplet.contenu;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -217,6 +227,7 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
                     padding: const EdgeInsets.all(8.0),
                     child: AppText(
                       content,
+                      size: 16,
                       align: TextAlign.center,
                     ),
                   ),
@@ -342,53 +353,53 @@ class _PlayMusicsState extends ConsumerState<PlayMusics> {
                   const SizedBox(
                     height: 10,
                   ),
-                  isLocal
-                      ? Row(
-                          children: const [
-                            Padding(
-                              padding: EdgeInsets.only(left: 20.0),
-                              child: AppText("Téléchargé "),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.check_circle,
-                                color: Colors.green,
-                              ),
-                            ),
-                          ],
-                        )
-                      : GestureDetector(
-                          onTap: () async {
-                            setState(() {
-                              isDownloading = true;
-                            });
-                            await download().then((value) async {
-                              if (value != null) {
-                                StringData.cantiqueDowloaded = {widget.cantique.id.toString(): value.path};
-                                await ref.read(CantiqueCrudController).downloadCantique();
-                                ref.refresh(fetchAllTest);
-
-                                setState(() {
-                                  isLocal = true;
-                                  isDownloading = false;
-                                });
-                              }
-                            });
-                          },
-                          child: Row(
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(left: 20.0),
-                                child: AppText("Télécharger ? "),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: isDownloading ? const CircularProgressIndicator() : const Icon(Icons.download),
-                              ),
-                            ],
-                          ),
-                        ),
+                  // isLocal
+                  //     ? Row(
+                  //         children: const [
+                  //           Padding(
+                  //             padding: EdgeInsets.only(left: 20.0),
+                  //             child: AppText("Téléchargé "),
+                  //           ),
+                  //           Padding(
+                  //             padding: EdgeInsets.all(8.0),
+                  //             child: Icon(
+                  //               Icons.check_circle,
+                  //               color: Colors.green,
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       )
+                  //     : GestureDetector(
+                  //         onTap: () async {
+                  //           setState(() {
+                  //             isDownloading = true;
+                  //           });
+                  //           await download().then((value) async {
+                  //             if (value != null) {
+                  //               StringData.cantiqueDowloaded = {widget.cantique.id.toString(): value.path};
+                  //               await ref.read(CantiqueCrudController).downloadCantique();
+                  //               ref.refresh(fetchAllTest);
+                  //
+                  //               setState(() {
+                  //                 isLocal = true;
+                  //                 isDownloading = false;
+                  //               });
+                  //             }
+                  //           });
+                  //         },
+                  //         child: Row(
+                  //           children: [
+                  //             const Padding(
+                  //               padding: EdgeInsets.only(left: 20.0),
+                  //               child: AppText("Télécharger ? "),
+                  //             ),
+                  //             Padding(
+                  //               padding: const EdgeInsets.all(8.0),
+                  //               child: isDownloading ? const CircularProgressIndicator() : const Icon(Icons.download),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
                   const SizedBox(
                     height: 20,
                   ),
